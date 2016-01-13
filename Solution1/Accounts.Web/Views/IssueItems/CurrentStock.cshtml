@@ -1,0 +1,95 @@
+﻿@model IEnumerable<Accounts.Web.ViewModel.IssueItemsViewModel>
+
+<script>
+    $(document).ready(function () {
+        $(document).ready(function () {
+            $('#currentstock').DataTable({
+                dom: 'Blfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+            });
+        });
+    });
+
+    $(function () {
+        $("#datepicker").datepicker();
+    });
+</script>
+<h2>Current Stock</h2>
+<hr />
+
+
+<table class="table table-bordered table-striped responsive">
+    <tbody>
+        <tr>
+            <td class="col-md-2">
+                <div class="form-group form-group-sm">
+                    <div class="col-md-12">
+                        @Html.DropDownList("StoreId", null, htmlAttributes: new { @class = "form-control" })
+                    </div>
+                </div>
+            </td>
+            <td class="col-md-2">
+                <div class="form-group form-group-sm">
+                    <div class="col-md-12">
+                        @Html.DropDownList("CategoryId", null, htmlAttributes: new { @class = "form-control" })
+                    </div>
+                </div>
+            </td>
+            <td class="col-md-2">
+                <div class="form-group form-group-sm">
+                    <div class="col-md-12">
+                        @Html.DropDownList("ItemId", null, htmlAttributes: new { @class = "form-control" })
+                    </div>
+                </div>
+            </td>
+            <td class="col-md-2">
+                <input type="text" id="datepickerto" class="form-control" placeholder="To Date">
+            </td>
+            <td class="col-md-2">
+                <input type="text" id="datepickerfrom" class="form-control" placeholder="From Date">
+            </td>
+            <td class="col-md-1">
+                <button class="btn btn-sm btn-success" id="searchbtn">Search</button>
+            </td>
+        </tr>
+
+    </tbody>
+</table>
+<br />
+<br />
+
+<div id="purchasedata">
+    @Html.Partial("_CurrentStock", Model)
+</div>
+
+
+<script>
+    $('#searchbtn').on('click', function (e) {
+        var supplierid = $("#StoreId").val();
+        var categoryid = $("#CategoryId").val();
+        var itemid = $("#ItemId").val();
+
+        $.ajax({
+            type: 'GET',
+            url: "@Url.Action("DisplaySearchResults", "IssueItems")",
+            data: { supplierId: supplierid, categoryid: categoryid, itemid: itemid },
+            // dataType: 'json',
+            success: function (data) {
+                console.log('success', data);
+                $("#purchasedata").html(data)
+            },
+            error: function (exception) { alert('Exeption:' + exception); }
+        });
+        e.preventDefault();
+    });
+
+
+    //$.get(action, null, function (data) {
+    //    $('#someDiv').html(data);
+    //}, 'html');
+</script>
+
+
+

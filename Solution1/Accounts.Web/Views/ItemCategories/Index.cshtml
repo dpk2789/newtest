@@ -1,0 +1,16 @@
+﻿@model string
+
+<div class="box-inner">
+    <div class="box-content">
+        <h2>Item Categories</h2>
+        <hr />
+        <p>
+            <br />
+            <a href="/ItemCategories/Create" class="btn btn-success btn-xs">Create New</a>
+        </p>
+
+        <div id="categories">
+            @Html.Raw(@Model)
+        </div>
+    </div>
+</div>

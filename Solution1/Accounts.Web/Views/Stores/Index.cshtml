@@ -1,0 +1,158 @@
+﻿@model IEnumerable<Accounts.Model.Model.Store>
+
+<h2>Stores</h2>
+<hr />
+
+<div id="issueitemsModal" class="modal fade in">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div id="issueitemsModalContent"></div>
+        </div>
+    </div>
+</div>
+
+<div id="storeitemsModal" class="modal fade in">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id="storeitemsModalContent"></div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <i class="fa fa-bell fa-fw"></i>
+            <p>
+                @Html.ActionLink("Create Store", "Create", null, new { @class = "btn btn-success btn-xs" })
+            </p>
+        </div>
+        <div class="panel-body">
+            <div class="">
+                <!-- tabs left -->
+                <div class="tabbable tabs-left">
+                    <ul class="nav nav-tabs nav-pills nav-stacked success col-md-2">
+                        @{
+                            int j = 0;
+                            foreach (var item in Model)
+                            {
+                                if (j == 1)
+                                {
+                                    <li>
+                                        <a href="#@item.Id" class="list-group-item" data-toggle="tab">
+                                            <i class="fa fa-comment fa-fw"></i> @Html.DisplayFor(modelItem => item.Name)
+                                            <span class="pull-right text-muted small">
+                                                <em class="green">
+                                                    @item.WareHouse.Name
+                                                    @Html.ActionLink("Details", "Edit", "Stores", new { id = item.Id }, new { @class = "btn btn-default btn-xs" }) |
+                                                    @Html.ActionLink("Delete", "Delete", "Stores", new { id = item.Id }, new { @class = "btn btn-danger btn-xs" })
+                                                </em>
+                                            </span>
+                                        </a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="active">
+                                        <a href="#@item.Id" class="list-group-item" data-toggle="tab">
+                                            <i class="fa fa-comment fa-fw"></i> @Html.DisplayFor(modelItem => item.Name)
+                                            <span class="pull-right text-muted small">
+                                                <em class="green">
+                                                    @item.WareHouse.Name
+                                                    @Html.ActionLink("Details", "Edit", "Stores", new { id = item.Id }, new { @class = "btn btn-default btn-xs" }) |
+                                                    @Html.ActionLink("Delete", "Delete", "Stores", new { id = item.Id }, new { @class = "btn btn-danger btn-xs" })
+                                                </em>
+                                            </span>
+                                        </a>
+                                    </li>
+                                    j = j + 1;
+                                }
+                            }
+                        }
+                    </ul>
+                    <div class="tab-content">
+                        @{
+                            int i = 0;
+                            foreach (var store in Model)
+                            {
+                                if (i == 1)
+                                {
+                                    <div class="tab-pane" id="@store.Id">
+                                        <div class="row">
+                                            <div class="col-md-9 small">
+                                                @{ Html.RenderAction("StoreItems", "StoreItems", new { storeid = store.Id });}
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="tab-pane active" id="@store.Id">
+                                        <div class="row">
+                                            <div class="col-md-9 small">
+                                                @{ Html.RenderAction("StoreItems", "StoreItems", new { storeid = store.Id });}
+                                            </div>
+                                        </div>
+                                    </div>
+                                                 i = i + 1; ;
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/myscripts/issueitems.js"></script>
+    <script src="~/Scripts/myscripts/storeitems.js"></script>
+}
+
+
+@*<div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped table-condensed table-bordered">
+                <tr>
+                    <th>
+                        <label>WareHouse</label>
+                    </th>
+                    <th>
+                        <label>Store</label>
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IsActive)
+                    </th>
+                    <th>
+                        <p>
+                            @Html.ActionLink("Create Store", "Create", null, new { @class = "btn btn-success btn-xs" })
+                        </p>
+                    </th>
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.WareHouse.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IsActive)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Details", "Edit", "Stores", new { id = item.Id }, new { @class = "btn btn-default btn-xs" }) |
+                            @Html.ActionLink("Delete", "Delete", "Stores", new { id = item.Id }, new { @class = "btn btn-danger btn-xs" })
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+    </div>*@
+

@@ -1,0 +1,308 @@
+﻿@model Accounts.Model.Model.Item
+
+<h2>Edit Item</h2>
+<hr />
+<style>
+    #loading {
+      display: block;
+    margin-left: auto;
+    margin-right: auto 
+    }
+</style>
+@using (Html.BeginForm("Edit", "Items", FormMethod.Post, new { @id = "frmitems" }))
+{
+    // @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id, new { @class = "hdnitemid" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Code, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.UnitPrice, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.UnitPrice, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.UnitPrice, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ItemCategoryId, "ItemCategoryId", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("ItemCategoryId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ItemCategoryId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.UnitId, "Select Unit", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("UnitId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.UnitId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsActive, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.IsActive)
+                    @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="dvitemexistmsg"></div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Compound Item Ingridents</div>
+            <div class="panel-body">
+                <div class="col-md-12   table-responsive">
+                    <table class="table table-bordered table-hover table-condensed  table-responsive table-striped ">
+                        <tr>
+                            <td class="col-md-4">Item</td>
+                            <td class="col-md-4">Quantity</td>
+                            <td class="col-md-2"></td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DropDownList("IngridentId", null, htmlAttributes: new { @class = "form-control" })</td>
+                            <td><input type="text" id="UnitQuantity" class="form-control  txtOrderPrice" maxlength="7" placeholder="Unit Quantity" value="0" /> </td>
+                            <td>
+                                <a href="#" class="glyphicon glyphicon-pencil btnadd" id="btnadd" title="Add"></a>
+                                <a href="#" class="glyphicon glyphicon-edit btnupdate" id="btnupdate" title="Edit" style="display:none;"></a>
+                                <a href="#" class="glyphicon glyphicon-erase btnnew" id="btnnew" title="New" style="display:none;"></a>
+                            </td>
+                        </tr>
+                        <tbody id="tbodyorder" class="tbodyorder bordered">
+
+                            @foreach (var item in Model.CompoundItemIngredients)
+                            {
+                                <tr>
+                                    <td>
+                                        <input type="hidden" class='pid' value="@item.IngridentId" />
+                                        <p class='productname'>@item.IngridentName</p>
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.UnitQuantity)
+                                    </td>
+                                    <td>
+                                        <a class='glyphicon glyphicon-edit edit' style='cursor:pointer;' />
+                                        <a class='glyphicon glyphicon-trash delete' style='cursor:pointer;' />
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-md-offset-11 col-md-10">
+                <div id="loading" class="loadinggif"></div>
+                <input type="submit" value="Save" class="btn btn-success SaveOrder" />
+            </div>
+
+        </div>
+
+    </div>
+
+}
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary btn-xs" })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+<script>
+    $('.btnadd').on("click", function (e) {
+        var newcontent = "";
+        var IngridentId = $('#IngridentId').val();
+        var IngridentName = $("#IngridentId option:selected").text();
+        var UnitQuantity = $('#UnitQuantity').val();
+        $('.dvitemexistmsg').html("");
+        newcontent = "";
+
+        $('#tbodyorder tr').each(function () {
+            newcontent += "<tr >";
+            newcontent += "<td>" + $(this).find("td").eq(0).html(); + " </td >";
+            newcontent += "<td  >" + parseFloat($(this).find("td").eq(1).html()).toFixed(2); + "</td >";
+            newcontent += "<td   >";
+            newcontent += "<a  class='glyphicon glyphicon-edit edit' style='cursor:pointer;'/>";
+            newcontent += "<a  class='glyphicon glyphicon-trash delete' style='cursor:pointer;'/>";
+            newcontent += "</td >";
+            newcontent += "</tr >";
+        });
+
+
+        newcontent += "<tr >";
+        newcontent += "<td   >";
+        newcontent += "<input type='hidden' class='pid' value=" + IngridentId + " />";
+        newcontent += "<p class='productname'>" + IngridentName + "</p>";
+        newcontent += "</td >";
+        newcontent += "<td  >" + UnitQuantity + " </td >";
+        newcontent += "<td   >";
+        newcontent += "<a  class='glyphicon glyphicon-edit edit' style='cursor:pointer;'/>";
+        newcontent += "<a  class='glyphicon glyphicon-trash delete' style='cursor:pointer;'/>";
+        newcontent += "</td >";
+        newcontent += "</tr >";
+        $('#tbodyorder').empty().append(newcontent);
+
+        //  $(".showimg").hide();
+
+    });
+
+    $('.btnupdate').on("click", function (e) {
+        var totalamnt = 0;
+        var newcontent = "";
+        var ItemId = $('#ItemId').val();
+        alert(ItemId)
+        var ItemName = $("#ItemId option:selected").text();
+        var UnitQuantity = $('#UnitQuantity').val();
+
+        $('.dvitemexistmsg').html("");
+        $('#tbodyorder tr').each(function () {
+            var text = $(this).find("td").eq(5).html();
+
+            var itemidrw = $(this).find('.productname').val();
+            if (ItemId == itemidrw) {
+                isItemEdit = true;
+                // alert('product id=item id'+StatusId)
+                newcontent += "<tr >";
+                newcontent += "<td >" + ItemName + " </td >";
+                newcontent += "<td   align='right'>";
+                newcontent += parseFloat(UnitQuantity).toFixed(2);
+                newcontent += " </td >";
+                newcontent += "<td   >";
+                newcontent += "<a  class='glyphicon glyphicon-edit edit' style='cursor:pointer;'/>";
+                newcontent += "<a  class='glyphicon glyphicon-trash delete' style='cursor:pointer;'/>";
+                newcontent += "</td >";
+                newcontent += "</tr >";
+            }
+
+        });
+
+
+        if (CheckItemExists(ItemName) == false) {
+            newcontent += "<tr >";
+            newcontent += "<td>" + $(this).find("td").eq(0).html(); + " </td >";
+            newcontent += "<td  >" + parseFloat($(this).find("td").eq(1).html()).toFixed(2); + "</td >";
+            newcontent += "<td   >";
+            newcontent += "<a  class='glyphicon glyphicon-edit edit' style='cursor:pointer;'/>";
+            newcontent += "<a  class='glyphicon glyphicon-trash delete' style='cursor:pointer;'/>";
+            newcontent += "</td >";
+            newcontent += "</tr >";
+        }
+
+        $('#tbodyorder').empty().append(newcontent);
+
+    });
+
+    function CheckItemExists(pname) {
+        var flag = false;
+        $('#tbodyorder tr').each(function () {
+            var itemidinrow = $(this).find('.productname').val();
+            //alert('itemid:' + itemid + 'itemidinrow:' + itemidinrow)
+            if (ItemId == itemidinrow) {
+                $('.dvitemexistmsg').html(ShowError(pname, "Item already exist"));
+                flag = true;
+            }
+        });
+        return flag;
+    }
+
+    $("#tbodyorder").on('click', '.edit', function (e) {
+        e.preventDefault();
+        var tr = $(this).closest('tr');
+
+        var ProductId = tr.find(".productname").html();
+        //alert(ProductId)
+
+        $('#ItemId').val(ProductId);
+
+
+        $('#btnupdate').show();
+        $('#btnnew').show();
+        $('#btnadd').hide();
+    })
+
+    $("#tbodyorder").on('click', '.delete', function (e) {
+        // e.preventDefault();
+        var tr = $(this).closest('tr');
+        tr.css("background-color", "#FF3700");
+        tr.remove();
+        //  ReCalculateTotal();
+    })
+
+    $('.SaveOrder').on("click", function (e) {
+        e.preventDefault();
+        $(".ajax-loading-block-window").show();
+        var OrderDetl = [];
+        $('#tbodyorder tr').each(function () {
+            var ItemId = $('.hdnitemid').val();
+            var IngridentId = $(this).find(".pid").val();
+            var IngridentName = $(this).find(".productname").html();
+            var UnitQuantity = $(this).find("td").eq(1).html();
+            OrderDetl.push({ 'ItemId': ItemId, 'IngridentId': IngridentId, 'IngridentName': IngridentName, 'UnitQuantity': UnitQuantity });
+        });
+        //  alert(JSON.stringify(OrderDetl) + '  ' + OrderDetl.length)
+        if (OrderDetl.length > 0) {
+            $('#OrderDetl').val(JSON.stringify(OrderDetl))
+        }
+        var form = "frmitems";
+        var token = $('input[name="__RequestVerificationToken"]').val();
+        // alert(token);
+        var headers = {};
+        headers['__RequestVerificationToken'] = token;
+        //if ($("#frmitems").valid()) {
+        $('#loading').html('<img src="/Images/default.gif" /> loading...');
+        $(".SaveOrder").attr("class", "btn btn-primary SaveOrder disabled");
+        var code = $('#Code').val();
+        var id = $('.hdnitemid').val();
+        $.ajax({
+            url: $("#" + form).attr("action"),
+            type: $("#" + form).attr("method"),
+            data: { data: JSON.stringify(OrderDetl), code: code, id: id },
+            dataType: "json",
+            //headers: headers,
+            success: function (data) {
+                if (data.success == true) {
+                    $('#loading').html(data);
+                    $(".SaveOrder").attr("class", "btn btn-success SaveOrder");
+                }
+            },
+            error: function (xhr, status) {
+                alert(xhr.responseText);
+                $(".ajax-loading-block-window").hide();
+                $(".SaveOrder").attr("class", "btn btn-primary SaveOrder");
+
+            }
+        });
+        // }
+        //else {
+        //    //alert('error');
+        //    $(".ajax-loading-block-window").hide();
+        //}
+    })
+</script>

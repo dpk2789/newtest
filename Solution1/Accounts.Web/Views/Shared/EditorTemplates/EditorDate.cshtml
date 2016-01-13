@@ -1,0 +1,10 @@
+﻿@model DateTime?
+@Html.TextBox("", (Model.HasValue ? Model.Value.ToString("yyyy/MM/dd") : string.Empty), new { @class = "form-control datetimepicker6" })
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.datetimepicker6').datetimepicker({
+            format: 'YYYY/MM/DD HH:mm:ss',
+        });
+    });
+</script>

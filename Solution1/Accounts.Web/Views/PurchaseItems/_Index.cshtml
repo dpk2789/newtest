@@ -1,0 +1,83 @@
+﻿@model IEnumerable<Accounts.Web.ViewModel.PurchaseItemsViewModel>
+
+<div class="panel panel-default small">
+    <div class="panel-heading">
+        <strong>Add Items</strong>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover table-striped table-condensed table-bordered">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Unit)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Code)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Quantity)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UnitPrice)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ExtendedPrice)
+                </th>
+                <th>
+                    <p>
+                        @Html.ActionLink("Add", "Create", "PurchaseItems", new { purchaseBillId = ViewBag.purchaseBillId },
+                         new { @class = "btn btn-primary btn-xs", data_modal = "purchaseitem" })
+                    </p>
+                </th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Unit.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Code)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UnitPrice)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ExtendedPrice)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Details", "Edit", "PurchaseItems",
+                                             new { id = item.Id }, new { @class = "btn btn-default btn-xs", data_modal = "purchaseitem" })
+
+                        @Html.ActionLink("Delete", "Delete", "PurchaseItems",
+                                             new { id = item.Id }, new { @class = "btn btn-danger btn-xs", data_modal = "purchaseitem" })
+                    </td>
+                </tr>
+            }
+            <tr>
+                @{
+                    decimal total = ViewBag.ItemExtentedPriceTotal;
+                    decimal quantitytotal = ViewBag.QuantityTotal;
+                }
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><b>Total :-</b> <text>Rs.</text><b> @String.Format("{0:#,###.00}", quantitytotal) </b></td>
+                <td></td>
+                <td><b>Total :-</b> <text>Rs.</text><b>@String.Format("{0:#,###.00}", total)<input id="itemtotal" type="hidden" value="@total" /></b></td>
+                <td></td>
+                
+            </tr>
+
+        </table>
+    </div>
+</div>

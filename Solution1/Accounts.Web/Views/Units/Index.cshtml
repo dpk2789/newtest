@@ -1,0 +1,34 @@
+﻿@model IEnumerable<Accounts.Model.Model.Unit>
+
+<h2>Units </h2>
+<hr />
+
+
+<div class="table-responsive">
+    <table class="table table-hover table-striped table-condensed table-bordered">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>          
+            <th>
+                <p>
+                    @Html.ActionLink("Create Unit", "Create", null, new { @class = "btn btn-success btn-xs" })
+                </p>
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>          
+            <td>
+                @Html.ActionLink("Details", "Edit", "Units", new { id = item.Id }, new { @class = "btn btn-default btn-xs" }) |
+                @Html.ActionLink("Delete", "Delete", "Units", new { id = item.Id }, new { @class = "btn btn-danger btn-xs" })
+            </td>
+        </tr>
+        }
+
+    </table>
+</div>

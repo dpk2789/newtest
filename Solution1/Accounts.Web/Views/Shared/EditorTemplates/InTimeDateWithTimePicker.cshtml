@@ -1,0 +1,12 @@
+﻿@model DateTime?
+@Html.TextBox("", (Model.HasValue ? Model.Value.ToString("hh:mm:ss tt") : string.Empty), new { @class = "date  form-control inTime " })
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.datetimepicker6').datetimepicker({        
+                format: 'LT',
+                //format: 'hh :mm  A',
+                //daysOfWeekDisabled: [0, 6]
+            });
+    });
+</script>

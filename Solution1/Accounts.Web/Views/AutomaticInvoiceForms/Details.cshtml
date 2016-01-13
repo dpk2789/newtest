@@ -1,0 +1,58 @@
+﻿@model Accounts.Model.Model.AutomaticInvoiceForm
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>AutomaticInvoiceForm</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Type)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Prefix)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Prefix)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Suffix)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Suffix)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Numbering)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Numbering)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsActive)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsActive)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

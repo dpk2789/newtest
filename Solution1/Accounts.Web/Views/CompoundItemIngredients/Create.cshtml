@@ -1,0 +1,249 @@
+﻿@model Accounts.Model.Model.CompoundItemIngredient
+
+<h2>Create Compound Item</h2>
+<h4></h4>
+<hr />
+@using (Html.BeginForm("Create", "CompoundItemIngredients", FormMethod.Post, new { @id = "frmitems" }))
+{
+    @*@Html.AntiForgeryToken()*@
+
+    <div class="form-horizontal">
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @*@Html.LabelFor(model => model.CompoundItemId, htmlAttributes: new { @class = "control-label col-md-2" })*@
+            <label class="control-label col-md-2">Compound Item </label>
+            <div class="col-md-10">
+                @Html.DropDownList("CompoundItemId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CompoundItemId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+     
+        <div class="dvitemexistmsg"></div>
+        <div class="panel panel-default">
+            <div class="panel-heading">Compound Item Ingridents</div>
+            <div class="panel-body">
+                <div class="col-md-12   table-responsive">
+                    <table class="table table-bordered table-hover table-condensed  table-responsive table-striped ">
+                        <tr>
+                            <td class="col-md-4">Item</td>
+                            <td class="col-md-4">Quantity</td>
+                            <td width="50"></td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DropDownListFor(model => model.ItemId, new SelectList(ViewBag.ItemId, "Value", "Text"), new { @class = "form-control" })</td>
+                            <td><input type="text" id="UnitQuantity" class="form-control  txtOrderPrice" maxlength="7" placeholder="Unit Quantity" value="0" /> </td>
+                            <td>
+                                <a href="#" class="glyphicon glyphicon-pencil btnadd" id="btnadd" title="Add"></a>
+                                <a href="#" class="glyphicon glyphicon-edit btnupdate" id="btnupdate" title="Edit" style="display:none;"></a>
+                                <a href="#" class="glyphicon glyphicon-erase btnnew" id="btnnew" title="New" style="display:none;"></a>
+                            </td>
+                        </tr>
+                        <tbody id="tbodyorder" class="tbodyorder bordered"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="loading"></div>
+        <div class="form-group">
+            <div class="col-md-offset-11 col-md-10">
+                <input type="submit" value="Save" class="btn btn-success SaveOrder" />
+            </div>
+        </div>
+    </div>
+}
+
+
+<script>
+    $('.btnadd').on("click", function (e) {
+        var newcontent = "";
+        var ProductId = $('#ItemId').val();
+        var ProductName = $("#ItemId option:selected").text();
+        var UnitQuantity = $('#UnitQuantity').val();
+        $('.dvitemexistmsg').html("");
+        newcontent = "";
+
+        $('#tbodyorder tr').each(function () {
+            newcontent += "<tr >";
+            newcontent += "<td>" + $(this).find("td").eq(0).html(); + " </td >";
+            newcontent += "<td  >" + parseFloat($(this).find("td").eq(1).html()).toFixed(2); + "</td >";
+            newcontent += "<td   >";
+            newcontent += "<a  class='glyphicon glyphicon-edit edit' style='cursor:pointer;'/>";
+            newcontent += "<a  class='glyphicon glyphicon-trash delete' style='cursor:pointer;'/>";
+            newcontent += "</td >";
+            newcontent += "</tr >";
+        });
+
+
+        newcontent += "<tr >";
+        newcontent += "<td   >";
+        newcontent += "<input type='hidden' class='pid' value=" + ProductId + " />";
+        newcontent += "<p class='productname'>" + ProductName + "</p>";
+        newcontent += "</td >";
+        newcontent += "<td  >" + UnitQuantity + " </td >";
+        newcontent += "<td   >";
+        newcontent += "<a  class='glyphicon glyphicon-edit edit' style='cursor:pointer;'/>";
+        newcontent += "<a  class='glyphicon glyphicon-trash delete' style='cursor:pointer;'/>";
+        newcontent += "</td >";
+        newcontent += "</tr >";
+        $('#tbodyorder').empty().append(newcontent);
+
+        //  $(".showimg").hide();
+
+    });
+
+    $('.btnupdate').on("click", function (e) {
+        var totalamnt = 0;
+        var newcontent = "";
+        var ItemId = $('#ItemId').val();
+        alert(ItemId)
+        var ItemName = $("#ItemId option:selected").text();
+        var UnitQuantity = $('#UnitQuantity').val();
+
+        $('.dvitemexistmsg').html("");
+        $('#tbodyorder tr').each(function () {
+            var text = $(this).find("td").eq(5).html();
+
+            var itemidrw = $(this).find('.productname').val();
+            if (ItemId == itemidrw) {
+                isItemEdit = true;
+                // alert('product id=item id'+StatusId)
+                newcontent += "<tr >";
+                newcontent += "<td >" + ItemName + " </td >";
+                newcontent += "<td   align='right'>";
+                newcontent += parseFloat(UnitQuantity).toFixed(2);
+                newcontent += " </td >";
+                newcontent += "<td   >";
+                newcontent += "<a  class='glyphicon glyphicon-edit edit' style='cursor:pointer;'/>";
+                newcontent += "<a  class='glyphicon glyphicon-trash delete' style='cursor:pointer;'/>";
+                newcontent += "</td >";
+                newcontent += "</tr >";
+            }
+
+        });
+
+
+        if (CheckItemExists(ItemName) == false) {
+            newcontent += "<tr >";
+            newcontent += "<td>" + $(this).find("td").eq(0).html(); + " </td >";
+            newcontent += "<td  >" + parseFloat($(this).find("td").eq(1).html()).toFixed(2); + "</td >";
+            newcontent += "<td   >";
+            newcontent += "<a  class='glyphicon glyphicon-edit edit' style='cursor:pointer;'/>";
+            newcontent += "<a  class='glyphicon glyphicon-trash delete' style='cursor:pointer;'/>";
+            newcontent += "</td >";
+            newcontent += "</tr >";
+        }
+
+        $('#tbodyorder').empty().append(newcontent);
+
+    });
+
+    function CheckItemExists(pname) {
+        var flag = false;
+        $('#tbodyorder tr').each(function () {
+            var itemidinrow = $(this).find('.productname').val();
+            //alert('itemid:' + itemid + 'itemidinrow:' + itemidinrow)
+            if (ItemId == itemidinrow) {
+                $('.dvitemexistmsg').html(ShowError(pname, "Item already exist"));
+                flag = true;
+            }
+        });
+        return flag;
+    }
+
+    $("#tbodyorder").on('click', '.edit', function (e) {
+        e.preventDefault();
+        var tr = $(this).closest('tr');
+
+        var ProductId = tr.find(".productname").html();
+        //alert(ProductId)
+
+        $('#ItemId').val(ProductId);
+
+
+        $('#btnupdate').show();
+        $('#btnnew').show();
+        $('#btnadd').hide();
+    })
+
+
+    $("#tbodyorder").on('click', '.delete', function (e) {
+        // e.preventDefault();
+        var tr = $(this).closest('tr');
+        tr.css("background-color", "#FF3700");
+        tr.remove();
+        //  ReCalculateTotal();
+    })
+
+    $('.SaveOrder').on("click", function (e) {
+        e.preventDefault();
+        $(".ajax-loading-block-window").show();
+        var OrderDetl = [];
+        $('#tbodyorder tr').each(function () {
+            var ItemId = $(this).find(".pid").val();
+            var UnitQuantity = $(this).find("td").eq(1).html();
+            var CompoundItemId = $('#CompoundItemId').val();
+            OrderDetl.push({ 'ItemId': ItemId, 'CompoundItemId': CompoundItemId, 'UnitQuantity': UnitQuantity });
+
+        });
+        //  alert(JSON.stringify(OrderDetl) + '  ' + OrderDetl.length)
+        if (OrderDetl.length > 0) {
+            $('#OrderDetl').val(JSON.stringify(OrderDetl))
+        }
+        var form = "frmitems";
+        var token = $('input[name="__RequestVerificationToken"]').val();
+        // alert(token);
+        var headers = {};
+        headers['__RequestVerificationToken'] = token;
+        //if ($("#frmitems").valid()) {
+        $.ajaxStart(function () {
+            $('#loading').html('<img src="loading.gif"> loading...');
+        });
+        $(".SaveOrder").attr("class", "btn btn-primary SaveOrder disabled");
+
+        $.ajax({
+            url: $("#" + form).attr("action"),
+            type: $("#" + form).attr("method"),
+            data: { data: JSON.stringify(OrderDetl) },
+            dataType: "json",
+            //headers: headers,
+            success: function (data) {
+                if (data != null) {
+                    if (data.objResponse.IsSuccess == "false") {
+                        $("#popupError").html(data.objResponse.StrResponse);
+                    }
+                    else {
+                        $("#popupError").html("");
+                        $("#dvMsg").html(data.objResponse.StrResponse);
+                        DataTableInit();
+                        //$("#myModal").modal('hide');
+
+                    }
+                }
+              //  $(".ajax-loading-block-window").hide();
+
+                $(".SaveOrder").attr("class", "btn btn-primary SaveOrder");
+
+            },
+            error: function (xhr, status) {
+                alert(xhr.responseText);
+                $(".ajax-loading-block-window").hide();
+                $(".SaveOrder").attr("class", "btn btn-primary SaveOrder");
+
+            }
+        });
+        // }
+        //else {
+        //    //alert('error');
+        //    $(".ajax-loading-block-window").hide();
+        //}
+    })
+
+
+</script>
+
+<div>
+    @Html.ActionLink("Back to List", "Index","Items", null, new { @class = "btn btn-primary btn-xs" })
+</div>

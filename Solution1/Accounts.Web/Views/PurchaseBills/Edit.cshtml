@@ -1,0 +1,189 @@
+﻿@model Accounts.Model.Model.PurchaseBill
+
+<h2>Detail PurchaseBill</h2>
+<hr />
+<script>
+    function recalculateBillTotal() {
+        var freight = parseFloat(document.getElementById("Freight").value).toFixed(2);
+        var packaging = parseFloat(document.getElementById("Packaging").value).toFixed(2);
+        var otherExpenses = parseFloat(document.getElementById("OtherExpenses").value).toFixed(2);
+        var taxwithExtendedPrice = parseFloat(document.getElementById("TaxWithExtendedPrice").value).toFixed(2);
+        var itemtotal = parseFloat(document.getElementById("itemtotal").value).toFixed(2);
+
+
+        if (isNaN(freight)) {
+            freight = 0;
+        }
+
+        if (isNaN(packaging)) {
+            packaging = 0;
+        }
+
+        if (isNaN(otherExpenses)) {
+            otherExpenses = 0;
+        }
+
+        if (isNaN(taxwithExtendedPrice)) {
+            taxwithExtendedPrice = 0;
+        }
+
+        if (isNaN(itemtotal)) {
+            itemtotal = 0;
+        }
+        //document.getElementById("Freight").value = freight;
+        //document.getElementById("Packaging").value = packaging;
+        //document.getElementById("OtherExpenses").value = otherExpenses;
+        var total = Number(freight) + Number(packaging) + Number(otherExpenses) + Number(taxwithExtendedPrice) + Number(itemtotal);
+
+        document.getElementById("BillTotal").value = numberWithCommas(total);
+    }
+</script>
+
+<div id="purchaseitemModal" class="modal fade in">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id="purchaseitemModalContent"></div>
+        </div>
+    </div>
+</div>
+
+<div id="purchasetaxModal" class="modal fade in">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id="purchasetaxModalContent"></div>
+        </div>
+    </div>
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="col-md-6">
+            <div class="form-group form-group-sm">
+                @Html.LabelFor(model => model.BillInvoice, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.BillInvoice, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.BillInvoice, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                @Html.LabelFor(model => model.SupplierInvoice, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.SupplierInvoice, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.SupplierInvoice, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group form-group-sm">
+                @Html.LabelFor(model => model.BillDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.BillDate, "DateWithPicker")
+                    @Html.ValidationMessageFor(model => model.BillDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                @Html.LabelFor(model => model.SupplierId, "SupplierId", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("SupplierId", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.SupplierId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-offset-1 col-md-10">
+                @{ Html.RenderAction("Index", "PurchaseItems", new { purchaseBillId = Model.Id });}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-offset-1 col-md-10">
+                @{ Html.RenderAction("Index", "PurchaseTaxes", new { purchaseBillId = Model.Id });}
+            </div>
+        </div>
+
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group form-group-sm col-md-offset-6">
+                    @Html.LabelFor(model => model.TaxWithExtendedPrice, htmlAttributes: new { @class = "control-label col-md-8" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.TaxWithExtendedPrice, new { htmlAttributes = new { @class = "form-control", onchange = "recalculateBillTotal()" } })
+                        @Html.ValidationMessageFor(model => model.TaxWithExtendedPrice, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="form-group form-group-sm col-md-offset-6">
+                    @Html.LabelFor(model => model.Freight, htmlAttributes: new { @class = "control-label col-md-8" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.Freight, new { htmlAttributes = new { @class = "form-control", onchange = "recalculateBillTotal()" } })
+                        @Html.ValidationMessageFor(model => model.Freight, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="form-group form-group-sm col-md-offset-6">
+                    @Html.LabelFor(model => model.Packaging, htmlAttributes: new { @class = "control-label col-md-8" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.Packaging, new { htmlAttributes = new { @class = "form-control", onchange = "recalculateBillTotal()" } })
+                        @Html.ValidationMessageFor(model => model.Packaging, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="form-group form-group-sm col-md-offset-6">
+                    @Html.LabelFor(model => model.OtherExpenses, htmlAttributes: new { @class = "control-label col-md-8" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.OtherExpenses, new { htmlAttributes = new { @class = "form-control", onchange = "recalculateBillTotal()" } })
+                        @Html.ValidationMessageFor(model => model.OtherExpenses, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="form-group form-group-sm col-md-offset-6">
+                    @Html.LabelFor(model => model.BillTotal, htmlAttributes: new { @class = "control-label col-md-8" })
+                    <div class="col-md-3">
+                        @*@Html.TextBox("Total", String.Format("{0:#,###.00}", Model.BillTotal), new { @class = "form-control" })*@
+                        @*@Html.EditorFor(model => model.BillTotal, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })*@
+                        @Html.EditorFor(model => model.BillTotal, "CustomNumberFormat")
+                        @Html.ValidationMessageFor(model => model.BillTotal, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group ">
+                <div class="col-md-offset-10">
+                    <input type="submit" value="Save" class="btn btn-success" />
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary btn-xs" })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/myscripts/purchaseitems.js"></script>
+    <script src="~/Scripts/myscripts/purchasetax.js"></script>
+}

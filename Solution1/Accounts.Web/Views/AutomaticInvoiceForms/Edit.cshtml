@@ -1,0 +1,59 @@
+﻿@model Accounts.Web.ViewModel.AutomaticInvoiceFormViewModel
+
+<h2>Purchase Automatic Invoice Form</h2>
+<hr />
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.HiddenFor(a => a.Id)
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group form-group-sm">
+            @Html.LabelFor(model => model.Type, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.Type, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group form-group-sm">          
+            <label class="control-label col-md-2">Generate Automatic Invoice</label>
+            <div class="col-md-8">
+                @*@Html.DropDownListFor(model => model.AutomaticPurchaseInvoice, ViewBag.AutomaticPurchaseInvoice as List<SelectListItem>, htmlAttributes: new { @class = "form-control col-md-2" })*@
+                @Html.DropDownList("AutomaticPurchaseInvoice", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.AutomaticPurchaseInvoice, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Prefix, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Prefix, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Prefix, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Suffix, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Suffix, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Suffix, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Numbering, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Numbering, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Numbering, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-success" />
+            </div>
+        </div>
+    </div>
+}

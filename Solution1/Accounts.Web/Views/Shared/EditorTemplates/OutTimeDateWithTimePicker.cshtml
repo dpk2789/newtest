@@ -1,0 +1,12 @@
+﻿@model DateTime?
+@Html.TextBox("", (Model.HasValue ? Model.Value.ToString("hh:mm:ss tt") : string.Empty), new { @class = "date  form-control outTime" })
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.datetimepicker7').datetimepicker({
+            //format: 'HH :mm',
+            format: 'LT',
+        });
+    });
+</script>
+

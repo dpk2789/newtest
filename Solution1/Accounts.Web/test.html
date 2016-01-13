@@ -1,0 +1,963 @@
+﻿@model Tiles.Model.OrderModel
+
+
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog" style="display: none; font-size:12px; ">
+
+    @using (Html.BeginForm("SaveOrder", "Order", FormMethod.Post, new { @id = "frm" }))
+    {
+    @Html.ValidationSummary(true)
+    @Html.AntiForgeryToken()
+
+    <div class="modal-dialog" style="width:1280px;">
+        <div class="modal-content" style="width:1280px;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">
+                    @if (@Model.Id <= 0)
+                    { <label>Add Order</label> }
+                    else
+                    { <label>Update Order</label>}
+                    <span id="skuname"></span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                @*<div id="popupError"></div>*@
+                <div>
+                    <div class="panel-body">
+                        <div class="row"><div class="col-md-12"><div id="popupError"></div></div> </div>
+                        <div>
+                            <div class="row">
+                                <div class="col-md-1">Order <span class="redcolor">*</span></div>
+                                <div class="col-md-3">@Html.TextBoxFor(mode => mode.TempNo, new { @class = "form-control", @disabled = "disable", @placeholder = "Date" }) @Html.HiddenFor(model => model.TempNo) </div>
+                                <div class="col-md-3"></div>
+                                <div class="col-md-1">Date <span class="redcolor">*</span></div>
+                                <div class="col-md-2">
+                                    @Html.TextBoxFor(mode => mode.OrderDate, new { @class = "form-control", @placeholder = "Date", @onkeypress = "return NotAllowSpecialChar(event);" })
+                                    @Html.ValidationMessageFor(model => model.OrderDate)
+                                </div>
+                                <div class="col-md-2">
+                                    <select id="VatExcise" name="VatExcise" class="form-control VatExcise" style="text-align:center;">
+                                        @*
+                                        <option value="">-- Select V-E --</option>*@
+                                        <option value="++">++</option>
+                                        <option value="AI">AI</option>
+                                    </select>
+                                    @Html.ValidationMessageFor(model => model.VatExcise)
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1">Party<span class="redcolor">*</span></div>
+                                <div class="col-md-3">
+                                    @Html.DropDownListFor(model => model.PartyId, new SelectList(Model.PartyList, "Value", "Text"), new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.PartyId)
+                                </div>
+                                <div class="col-md-3"></div>
+                                <div class="col-md-1">Limit</div>
+                                <div class="col-md-2">@Html.TextBoxFor(mode => mode.CreditLimit, new { @class = "form-control", @placeholder = "Credit Limit", @disabled = "disabled" })</div>
+                                <div class="col-md-2">
+                                    <select name="BrandId" class="brand form-control">
+                                        <option value="0">-- Select Brand --</option>
+                                    </select>
+                                    @Html.ValidationMessageFor(model => model.BrandId)
+                                    @Html.HiddenFor(model => model.BrandId)
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row"><div class="col-md-2"><strong>Products</strong></div><div class="col-md-2"><strong>Current Qty:</strong><span id="spnqty">0</span></div><div class="col-md-8">&nbsp;</div></div>
+                        <div class="row table-bordered orderentry" id="orderentry">
+                            <div class="dvitemexistmsg"></div>
+                            <div class="col-md-12   table-responsive">
+                                <table class="table table-bordered table-hover table-condensed  table-responsive table-striped ">
+                                    <tr>
+                                        <td width="200">Product SKU</td>
+                                        <td width="80">MRP </td>
+                                        <td width="90">O. Price  </td>
+                                        <td width="80">Cheque</td>
+                                        <td width="80">Cash</td>
+                                        <td width="50">Qty</td>
+                                        <td width="90">Amount</td>
+                                        <td width="120">Reason</td>
+                                        <td width="80">Status</td>
+                                        <td width="50"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>@Html.DropDownListFor(model => model.ProductId, new SelectList(Model.ProductList, "Value", "Text"), new { @class = "form-control" })</td>
+                                        <td>
+                                            <input type="hidden" id="txtDesigno" class="txtDesignno" /><input type="hidden" id="txtSize" class="txtSize" /><input type="hidden" id="txtGrade" class="txtGrade" />
+                                            <input type="text" id="txtPrice" class="form-control txtPrice" maxlength="7" disabled="disabled" placeholder="Mrp" />
+                                        </td>
+                                        <td><input type="text" id="txtOrderPrice" class="form-control  txtOrderPrice" maxlength="7" placeholder="Order Price" value="0" style="text-align:right;" onkeypress="return AvoidNonNumbers(this, event, true, false);" onkeydown="checkDec(this);" /> </td>
+                                        <td><input type="text" id="txtCheque" class="form-control txtCheque" maxlength="10" value="0" placeholder="Cheque" style="text-align:right;" onkeypress="return AvoidNonNumbers(this, event, true, false);" onkeydown="checkDec(this);" /> </td>
+                                        <td><input type="text" id="txtCash" class="form-control txtCash" maxlength="10" value="0" placeholder="Cash" style="text-align:right;" onkeypress="return AvoidNonNumbers(this, event, true, false);" onkeydown="checkDec(this);" /> </td>
+                                        <td><input type="text" id="txtOrderQty" class="form-control OrderQty" maxlength="5" placeholder="Qty" value="1" style="text-align:right;" onkeypress="return AvoidNonNumbers(this, event, true, false);" /> </td>
+                                        <td><input type="text" id="txtOrderAmount" class="form-control OrderAmount" maxlength="10" disabled="disabled" placeholder="Amount" onkeypress="return notAllowAnything(event);" /> </td>
+                                        <td><input type="text" id="txtReason" class="form-control txtReason" maxlength="500" placeholder="Reason" /> </td>
+                                        <td><input type="text" id="txtOrderStatus" class="form-control OrderStatus" maxlength="10" placeholder="Status" disabled="disabled" onkeypress="return notAllowAnything(event);" /> </td>
+
+                                        <td>
+                                            <a href="#" class="glyphicon glyphicon-pencil btnadd" id="btnadd" title="Add"></a>
+                                            <a href="#" class="glyphicon glyphicon-edit btnupdate" id="btnupdate" title="Edit" style="display:none;"></a>
+                                            <a href="#" class="glyphicon glyphicon-erase btnnew" id="btnnew" title="New" style="display:none;"></a>
+                                            <a href="#" class="glyphicon glyphicon-picture showimg" target="_blank" id="showimg" title="Show Image" style="display:none;">
+                                                <img src="" id="imgshowimg" class="imgshowimg" style="display:none;" />
+                                            </a>
+                                            <input type="hidden" id="hiddetlid" class="hiddetlid" value="0" />
+                                            <input type="hidden" id="hidheadid" class="hidheadid" value="0" />
+                                            <input type="hidden" id="hidlimitprice" class="limitprice" value="0" />
+                                            <input type="hidden" id="hidolditem" value="0" />
+                                            <input type="hidden" id="hidOrderCs" class="OrderCs" value="0" />
+                                            <input type="hidden" id="hidStatusId" value="0" />
+                                            <img src="~/Images/ajax_loader_small.gif" id="prdload" alt="" style="display:none;" />
+                                        </td>
+                                    </tr>
+                                    <tbody id="tbodyorder" class="tbodyorder bordered"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row>">
+                            <div class="col-md-12">
+                                @Html.HiddenFor(model => model.OrderDetl)
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">Tentative Delivery <span class="redcolor">*</span></div>
+                            <div class="col-md-2">
+                                @Html.TextBoxFor(mode => mode.DeliveryDate, new { @class = "form-control", @placeholder = " Delivery Date" })
+                                @Html.ValidationMessageFor(model => model.DeliveryDate)
+                            </div>
+                        </div>
+                        @*<div class="row">
+                            <div class="col-md-1">Date  </div>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(mode => mode.DeliveryDate, new { @class = "form-control", @placeholder = "Enter Delivery Date", @onkeypress = "return NotAllowSpecialChar(event);" })
+                                @Html.ValidationMessageFor(model => model.DeliveryDate)
+                            </div>
+
+                        </div>*@
+                        <div class="row">
+
+                            <div class="col-md-2">Delivery Location <span class="redcolor">*</span></div>
+                            <div class="col-md-2">
+                                @Html.DropDownListFor(model => model.DeliveryLocationId, new SelectList(Model.LocationList, "Value", "Text"), new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.DeliveryLocationId)
+                            </div>
+                            <div class="col-md-4">
+                                @Html.TextBoxFor(model => model.DeliveryAddressBilling, new { @class = "form-control delivadd", @placeholder = "Delivery address billing", @style = "display:none" })
+                                @Html.TextBoxFor(model => model.DeliveryAddressOthers, new { @class = "form-control delivoth", @placeholder = "Delivery address others",@style="display:none" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">Debit/Credit Note</div>
+                            <div class="col-md-2">@Html.DropDownListFor(model => model.DebitCreditNote, new SelectList(Model.DebitCreditNoteLst, "Value", "Text"), new { @class = "form-control" })</div>
+                            <div class="col-md-2">@Html.TextBoxFor(mode => mode.DbCrNoteAmnt, new { @class = "form-control", @placeholder = "Amount",onkeypress="return AvoidNonNumbers(this, event, true, false);", onkeydown="checkDec(this);" }) </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">Priority</div>
+                            <div class="col-md-2">@Html.DropDownListFor(model => model.Priority, new SelectList(Model.PriorityLst, "Value", "Text"), new { @class = "form-control" })</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">Remarks <span class="redcolor">*</span></div>
+                            <div class="col-md-4">
+                                @Html.TextBoxFor(mode => mode.Remarks, new { @class = "form-control", @placeholder = "Remarks" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="row">
+                    <div class="col-md-12"> </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default CloseOrder" data-dismiss="modal">Close &raquo;</button>
+                <button type="submit" class="btn btn-primary SaveOrder">Save &raquo;</button>
+            </div>
+        </div>
+    </div>
+    }
+</div>
+
+
+<script>
+    $('#ProductId').on("change", function (e) {
+        var ProductId = $('#ProductId').val();
+        $('#txtPrice').attr("placeholder", "Mrp");
+        var PartyId = $('#PartyId').val();
+        if (parseInt(PartyId) <= 0) {
+            $('.dvitemexistmsg').html(ShowError("Party. ", "Please select party"));
+            return;
+        }
+        $('#prdload').show();
+        $.ajax({
+            url: "/ProductPriceLimit/GetProductDetailForOrder",
+            type: "POST",
+            data: { 'ProductId': ProductId },
+            dataType: "json",
+            success: function (data) {
+                $('#indexlisting').empty();
+                $('#txtPrice').val('0');
+                $('#txtGrade').val('');
+                $('#txtSize').val('');
+                $('#txtDesignno').val('');
+                $('.txtLimitPrice').val("").attr("placeholder", "Limit price")
+                $('.txtLimitDate').val("").attr("placeholder", "Limit date")
+                if (data != null) {
+                    if (data.productmodel != null) {
+                        $('#txtPrice').val(data.productmodel.MRP);
+                        $('#txtGrade').val(data.productmodel.Grade);
+                        $('#txtSize').val(data.productmodel.Size);
+                        $('#txtDesignno').val(data.productmodel.DesignNo);
+                        $('#hidlimitprice').val(data.productmodel.LimitPrice);
+                        $(".showimg").prop("href",data.productmodel.ProductImagePath);
+                        $(".imgshowimg").prop("src", data.productmodel.ProductImagePath);
+                        //alert(data.stckmodel.Qty + '   ' + data.stckmodel.SkuNumber);
+                        $('#spnqty').html(data.stckmodel.Qty);
+                        $(".showimg").show();
+                        $('#txtOrderPrice').focus();
+                    }
+                }
+                $('#prdload').hide();
+            },
+            error: function (err) {
+                alert(err)
+                $('#prdload').hide();
+            }
+        });
+
+    })
+
+    $('#PartyId').on("change", function (e) {
+        $('.dvitemexistmsg').html('');
+        $.ajax({
+            url: "/Ledger/PartyById",
+            type: "POST",
+            data: { 'Id': $('#PartyId').val() },
+            dataType: "json",
+            success: function (data) {
+                if (data != null) {
+                    $('#CreditLimit').val(data.ledgermodel.CreditLimit);
+                    $('#DeliveryAddressBilling').val(data.ledgermodel.Address);
+                    //$('#BrandName').val(data.ledgermodel.BrandName);
+                    //$('#BrandId').val(data.ledgermodel.BrandID);
+                    $('.brand').empty().addItems(data.LedgerBrandLst);
+                    //GetProducts(data.ledgermodel.BrandID);
+                }
+            },
+            error: function (err) {
+                alert(err)
+            }
+        });
+    })
+
+    $('.brand').on("change", function (e) {
+        GetProducts($('.brand').val());
+    });
+
+    $('#DeliveryLocationId').on("change", function (e) {
+
+        var DelivId = $('#DeliveryLocationId').val();
+
+        $('.delivadd').hide();
+        $('.delivoth').hide();
+        if(DelivId=="1")
+        {
+            $('.delivadd').show();
+        }
+        else if (DelivId == "2")
+        {
+            $('.delivoth').show();
+        }
+        else
+        {
+            $('.delivadd').hide();
+            $('.delivoth').hide();
+        }
+
+    });
+
+    function GetProducts(BrandId) {
+        $.ajax({
+            url: "/Order/GetProductByBrand",
+            type: "POST",
+            data: { 'BrandId': BrandId },
+            dataType: "json",
+            success: function (data) {
+                if (data != null) {
+                    if (data.productlist != null) {
+                        $('#ProductId').empty().addItems(data.productlist);
+                    }
+                }
+            },
+            error: function (err) {
+                alert(err)
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        var str = "<ol class='breadcrumb'><li><a href='/' >Dashoard</a></li><li class='active'>Manage Orders</li></ol>";
+        $('.dvdashboard').empty().html(str);
+        $('#OrderDate').datetimepicker({
+            format: "DD-MM-YYYY",
+            minDate: new Date(),
+            pickTime: false
+        });
+        $('#DeliveryDate').datetimepicker({
+            format: "DD-MM-YYYY",
+            minDate: new Date(),
+            pickTime: false
+        });
+        var nua = navigator.userAgent;
+        var is_android = ((nua.indexOf('Mozilla/5.0') > -1 && nua.indexOf('Android ') > -1 && nua.indexOf('AppleWebKit') > -1) && !(nua.indexOf('Chrome') > -1));
+        if (is_android) {
+            $('select.form-control').removeClass('form-control').css('width', '100%');
+        }
+    })
+
+    $('.OrderQty').on("keyup", function (e) {
+        OrderPriceOrderQtyOrderCs();
+    })
+    $('#txtOrderPrice').on("keyup", function (e) {
+        OrderPriceOrderQtyOrderCs();
+        $('.txtOrderPrice').removeClass('input-validation-error').addClass('valid');
+    })
+    $('#txtOrderPrice').on("blur", function (e) {
+        $('.txtOrderPrice').removeClass('input-validation-error').addClass('valid');
+    })
+    $('#txtReason').on("blur", function (e) {
+        $('.txtReason').removeClass('input-validation-error').addClass('valid');
+    })
+    $('#txtCheque').on("blur", function (e) {
+        $('.txtCheque').removeClass('input-validation-error').addClass('valid');
+    })
+    $('#txtCash').on("blur", function (e) {
+        $('.txtCash').removeClass('input-validation-error').addClass('valid');
+    })
+
+    function OrderPriceOrderQtyOrderCs() {
+
+        $('.OrderStatus').val('').attr("placeholder", "Status");
+        var OrderQty = $('.OrderQty').val();
+        var OrderPrice = $('#txtOrderPrice').val();
+        var limitprice = $('#hidlimitprice').val();
+
+        if (OrderPrice == null) {
+            OrderPrice = 0;
+        }
+        if (OrderQty == null) {
+            OrderQty = 0;
+        }
+        if (limitprice == null) {
+            limitprice = 0;
+        }
+        var amount = parseFloat(parseFloat(OrderQty) * parseFloat(OrderPrice));
+        if (isNaN(amount)) {
+            amount = 0;
+        }
+        $('.OrderAmount').val(amount);
+        //alert(limitprice + ' limitprice' + '  ' + OrderPrice)
+        if (parseFloat(OrderPrice) < parseFloat(limitprice)) {
+            //alert(limitprice + ' limitprice' + '  ' + OrderPrice + ' orderprice' + '   ' + parseFloat(limitprice) - parseFloat(OrderPrice))
+            var orderCsdif = parseFloat(limitprice) - parseFloat(OrderPrice);
+            var orderCsAmnt = orderCsdif * parseFloat(OrderQty);
+            //alert(limitprice+' '+OrderPrice+'   '+orderCsdif+'  '+orderCsAmnt)
+            if (isNaN(orderCsAmnt)) {
+                orderCsAmnt = 0;
+            }
+            $('.OrderCS').val(orderCsAmnt);
+
+            $('.OrderStatus').val("Not Approved");
+            $('#hidStatusId').val(0);
+        }
+        else {
+            $('.OrderStatus').val("Approved");
+            $('#hidStatusId').val(1);
+
+        }
+    }
+
+    $('.btnnew').on("click", function (e) {
+        $('.btnupdate').hide();
+        $('.btnnew').hide();
+        $('.btnsave').show();
+
+        $('.hiddetlid').val('0');
+        $('.hidheadid').val('0');
+
+
+        $('.txtLimitPrice').val("").attr("placeholder", "Limit price")
+        $('.txtLimitDate').val("").attr("placeholder", "Limit date")
+        ClearAdd();
+    })
+
+
+    $('.btnadd').on("click", function (e) {
+        var newcontent = "";
+        var ProductId = $('#ProductId').val();
+        var ProductName = $("#ProductId option:selected").text();
+        var DesignNo = $('#txtDesignno').val();
+        var Size = $('#txtSize').val();
+        var Grade = $('#txtGrade').val();
+        var Price = $('#txtPrice').val();
+        var OrderPrice = $('#txtOrderPrice').val();
+        var Qty = $('#txtOrderQty').val();
+        var Amount = $('#txtOrderAmount').val();
+        var Chequ = $('#txtCheque').val();
+        var Cash = $('#txtCash').val();
+        var Reason = $('#txtReason').val();
+        var Cs = $('#hidOrderCs').val();
+        var Status = $('#txtOrderStatus').val();
+        var StatusId = $('#hidStatusId').val();
+        var hidlimitprice = $('#hidlimitprice').val();
+        //alert(ProductId+' '+ProductName+' '+DesignNo+' '+Size+' '+Grade+' '+Price+' '+OrderPrice+' '+Chequ+' '+Cash+' '+Qty+' '+Amount+' '+Reason+' '+hidlimitprice)
+        if (ProductId == null || isNaN(ProductId) || parseInt(ProductId) <= 0) {
+            $('.dvitemexistmsg').html(ShowError("Product. ", "Select product name"));
+        }
+        else if (OrderPrice == null || isNaN(OrderPrice) || parseInt(OrderPrice) <= 0) {
+            $('.dvitemexistmsg').html(ShowError("Order Price. ", "Enter order price"));
+        }
+        else if (Qty == null || isNaN(Qty) || parseInt(Qty) <= 0) {
+            $('.dvitemexistmsg').html(ShowError("Qty. ", "Enter qty"));
+        }
+        else if (Amount == null || isNaN(Amount) || parseInt(Amount) <= 0) {
+            $('.dvitemexistmsg').html(ShowError("Amount. ", "Amount greater then zero"));
+        }
+        else {
+            $('.dvitemexistmsg').html("");
+            newcontent = "";
+            if (CheckItemExists(ProductId, ProductName) == false) {
+                var totalamnt = 0;
+                $('#tbodyorder tr').each(function () {
+                    var text = $(this).find("td").eq(5).html();
+                    //alert(text+' Total ')
+                    if (text != "Total") {
+                        var amnt = $(this).find("td").eq(6).html();
+                        totalamnt = parseFloat(totalamnt) + parseFloat(amnt);
+                        newcontent += "<tr >";
+                        newcontent += "<td>" + $(this).find("td").eq(0).html(); + " </td >";
+                        newcontent += "<td  align='right'>";
+                        newcontent += parseFloat($(this).find("td").eq(1).html()).toFixed(2);
+                        newcontent += " </td >";
+                        newcontent += "<td align='right' >" + parseFloat($(this).find("td").eq(2).html()).toFixed(2); + " </td >";
+                        newcontent += "<td  align='right'>" + parseFloat($(this).find("td").eq(3).html()).toFixed(2); + "</td >";
+                        newcontent += "<td   align='right'>" + parseFloat($(this).find("td").eq(4).html()).toFixed(2); + "</td >";
+                        newcontent += "<td   align='right'>" + $(this).find("td").eq(5).html(); + " </td >";
+                        newcontent += "<td   align='right'>" + parseFloat($(this).find("td").eq(6).html()).toFixed(2); + " </td >";
+                        newcontent += "<td   >" + $(this).find("td").eq(7).html(); + " </td >";
+                        newcontent += "<td  >" + $(this).find("td").eq(8).html(); + " </td >";
+                        //newcontent += "<td  >" + $(this).find("td").eq(9).html(); + " </td >";
+                        var pid = $(this).find(".pid").val();
+                        var limitprice = $(this).find(".limitprice").val();
+                        var OCs = $(this).find(".OrderCs").val();
+                        var StatusId = $(this).find(".StatusId").val();
+                        var designo = $(this).find(".txtDesignno").val();
+                        var size = $(this).find(".txtSize").val();
+                        var grade = $(this).find(".txtGrade").val();
+                        newcontent += "<td   >";
+                        newcontent += "<input type='hidden' class='pid' value=" + pid + " />";
+                        newcontent += "<input type='hidden' id='hidlimitprice' class='limitprice' value=" + limitprice + " />";
+                        newcontent += "<input type='hidden' id='hidOrderCs' class='OrderCs' value=" + OCs + " />";
+                        newcontent += "<input type='hidden' id='hidStatusId' class='StatusId' value=" + StatusId + " />";
+                        newcontent += "<input type='hidden' id='txtDesigno' class='txtDesignno' value=" + designo + " />";
+                        newcontent += "<input type='hidden' id='txtSize' class='txtSize'  value=" + size + " />";
+                        newcontent += "<input type='hidden' id='txtGrade' class='txtGrade'  value=" + grade + " />"
+                        newcontent += "<a  class='glyphicon glyphicon-edit edit' style='cursor:pointer;'/>";
+                        newcontent += "<a  class='glyphicon glyphicon-trash delete' style='cursor:pointer;'/>";
+                        newcontent += "</td >";
+                        newcontent += "</tr >";
+                    }
+                });
+                totalamnt = parseFloat(totalamnt) + parseFloat(Amount);
+                var CrLimit = $('#CreditLimit').val();
+                if (parseFloat(totalamnt) > parseFloat(CrLimit)) {
+                    Status = "Not Approved by credit limit";
+                    StatusId = 2;
+                    // alert($('#hidStatusId').val()+' : ')
+                }
+                newcontent += "<tr >";
+                newcontent += "<td  >" + ProductName + " </td >";
+
+                newcontent += "<td   align='right'>"
+                newcontent += parseFloat(Price).toFixed(2);
+                newcontent += " </td >";
+                newcontent += "<td   align='right'>" + parseFloat(OrderPrice).toFixed(2) + " </td >";
+                newcontent += "<td   align='right'>" + parseFloat(Chequ).toFixed(2) + "</td >";
+                newcontent += "<td   align='right'>" + parseFloat(Cash).toFixed(2) + "</td >";
+                newcontent += "<td    align='right'>" + Qty + " </td >";
+                newcontent += "<td    align='right'>" + parseFloat(Amount).toFixed(2) + " </td >";
+                newcontent += "<td   >" + Reason + " </td >";
+                //newcontent += "<td   >" + VatExcise + " </td >";
+                newcontent += "<td   >" + Status + " </td >";
+                newcontent += "<td   >";
+                newcontent += "<input type='hidden' class='pid' value=" + ProductId + " />";
+                newcontent += "<input type='hidden' id='hidlimitprice' class='limitprice' value=" + hidlimitprice + " />";
+                newcontent += "<input type='hidden' id='hidOrderCs' class='OrderCs' value=" + Cs + " />";
+                newcontent += "<input type='hidden' id='hidStatusId' class='StatusId' value=" + StatusId + " />";
+                newcontent += "<input type='hidden' id='txtDesigno' class='txtDesignno' value=" + DesignNo + "/>";
+                newcontent += "<input type='hidden' id='txtSize' class='txtSize' value=" + Size + "/>";
+                newcontent += "<input type='hidden' id='txtGrade' class='txtGrade' value=" + Grade + "/>";
+                newcontent += "<a  class='glyphicon glyphicon-edit edit' style='cursor:pointer;'/>";
+                newcontent += "<a  class='glyphicon glyphicon-trash delete' style='cursor:pointer;'/>";
+                newcontent += "</td >";
+                newcontent += "</tr >";
+                ///calculate total
+                newcontent += "<tr   >";
+                newcontent += "<td ></td >";
+
+                newcontent += "<td   ></td >";
+                newcontent += "<td   ></td >";
+                newcontent += "<td  ></td >";
+                newcontent += "<td  ></td >";
+                newcontent += "<td   >Total</td >";
+                newcontent += "<td    align='right'>" + parseFloat(totalamnt).toFixed(2) + " </td >";
+                newcontent += "<td   > </td >";
+                // newcontent += "<td   > </td >";
+                newcontent += "<td   > </td >";
+                newcontent += "<td    ></td >";
+                newcontent += "</tr >";
+                $('#tbodyorder').empty().append(newcontent);
+
+                $(".showimg").hide();
+            }
+        }
+        ClearAdd();
+    })
+
+    $('.btnupdate').on("click", function (e) {
+        var totalamnt = 0;
+        var newcontent = "";
+        var ProductId = $('#ProductId').val();
+        var ProductName = $("#ProductId option:selected").text();
+        var DesignNo = $('#txtDesignno').val();
+        var Size = $('#txtSize').val();
+        var Grade = $('#txtGrade').val();
+        var Price = $('#txtPrice').val();
+        var OrderPrice = $('#txtOrderPrice').val();
+        var Qty = $('#txtOrderQty').val();
+        var Amount = $('#txtOrderAmount').val();
+        var Chequ = $('#txtCheque').val();
+        var Cash = $('#txtCash').val();
+        var Reason = $('#txtReason').val();
+        //var VatExcise = $('#VatExcise').val();
+        var Cs = $('#hidOrderCs').val();
+        var Status = $('#txtOrderStatus').val();
+        var StatusId = $('#hidStatusId').val();
+        var hidlimitprice = $('#hidlimitprice').val();
+        $('.txtOrderPrice').removeClass('input-validation-error').addClass('valid');
+        //alert(ProductId+' '+ProductName+' '+DesignNo+' '+Size+' '+Grade+' '+Price+' '+OrderPrice+' '+Chequ+' '+Cash+' '+Qty+' '+Amount+' '+Reason+' '+hidlimitprice)
+        if (ProductId == null || isNaN(ProductId) || parseInt(ProductId) <= 0) {
+            $('.dvitemexistmsg').html(ShowError("Product. ", "Select product name"));
+        }
+        else if (OrderPrice == null || isNaN(OrderPrice) || parseInt(OrderPrice) <= 0) {
+            $('.dvitemexistmsg').html(ShowError("Order Price. ", "Enter order price"));
+        }
+        else if (Qty == null || isNaN(Qty) || parseInt(Qty) <= 0) {
+            $('.dvitemexistmsg').html(ShowError("Qty. ", "Enter qty"));
+        }
+        else if (Amount == null || isNaN(Amount) || parseInt(Amount) <= 0) {
+            $('.dvitemexistmsg').html(ShowError("Amount. ", "Amount greater then zero"));
+        }
+        else {
+            $('.dvitemexistmsg').html("");
+            var isItemEdit = false;
+            newcontent = "";
+            //alert('statusid'+StatusId)
+            var totalAmountExceptId = 0;
+            totalAmountExceptId = parseFloat(Amount);
+            // alert('totalAmountExceptId:-------' + totalAmountExceptId)
+            $('#tbodyorder tr').each(function () {
+                var text = $(this).find("td").eq(5).html();
+                if (text != "Total") {
+                    var itemidrw = $(this).find('.pid').val();
+                    var amount = parseFloat($(this).find("td").eq(6).html()).toFixed(2);
+                    if (ProductId != itemidrw) {
+                        //alert('amount-'+amount)
+                        totalAmountExceptId = parseFloat(totalAmountExceptId) + parseFloat(amount);
+                    }
+                }
+            })
+            //alert('totalAmountExceptId:-------' + totalAmountExceptId)
+            $('#tbodyorder tr').each(function () {
+                var text = $(this).find("td").eq(5).html();
+                if (text != "Total") {
+                    var itemidrw = $(this).find('.pid').val();
+                    if (ProductId == itemidrw) {
+                        isItemEdit = true;
+                        totalamnt = parseFloat(totalamnt) + parseFloat(Amount);
+
+                        var CrLimit = $('#CreditLimit').val();
+                        //if (parseFloat(totalamnt) > parseFloat(CrLimit)) {
+                        if (parseFloat(totalAmountExceptId) > parseFloat(CrLimit)) {
+                            Status = "Not Approved by credit limit";
+                            StatusId = 2;
+                            //$('#hidStatusId').val(2);
+                        }
+                        // alert('product id=item id'+StatusId)
+                        newcontent += "<tr >";
+                        newcontent += "<td >" + ProductName + " </td >";
+                        newcontent += "<td   align='right'>";
+                        newcontent += parseFloat(Price).toFixed(2);
+                        newcontent += " </td >";
+                        newcontent += "<td   align='right'>" + parseFloat(OrderPrice).toFixed(2) + " </td >";
+                        newcontent += "<td   align='right'>" + parseFloat(Chequ).toFixed(2) + "</td >";
+                        newcontent += "<td  align='right'>" + parseFloat(Cash).toFixed(2) + "</td >";
+                        newcontent += "<td   align='right'>" + Qty + " </td >";
+                        newcontent += "<td  align='right'>" + parseFloat(Amount).toFixed(2) + " </td >";
+                        newcontent += "<td   >" + Reason + " </td >";
+                        //newcontent += "<td   >" + VatExcise + " </td >";
+                        newcontent += "<td   >" + Status + " </td >";
+                        newcontent += "<td   >";
+                        newcontent += "<input type='hidden' class='pid' value=" + ProductId + " />";
+                        newcontent += "<input type='hidden' id='hidlimitprice' class='limitprice' value=" + hidlimitprice + " />";
+                        newcontent += "<input type='hidden' id='hidOrderCs' class='OrderCs' value=" + Cs + " />";
+                        newcontent += "<input type='hidden' id='hidStatusId' class='StatusId' value=" + StatusId + " />";
+                        newcontent += "<input type='hidden' id='txtDesigno' class='txtDesignno' value=" + DesignNo + "/>";
+                        newcontent += "<input type='hidden' id='txtSize' class='txtSize'  value=" + Size + "/>";
+                        newcontent += "<input type='hidden' id='txtGrade' class='txtGrade'  value=" + Grade + "/>";
+                        newcontent += "<a  class='glyphicon glyphicon-edit edit' style='cursor:pointer;'/>";
+                        newcontent += "<a  class='glyphicon glyphicon-trash delete' style='cursor:pointer;'/>";
+                        newcontent += "</td >";
+                        newcontent += "</tr >";
+                    }
+                    else {
+                        var amnt = $(this).find("td").eq(6).html();
+                        totalamnt = parseFloat(totalamnt) + parseFloat(amnt);
+                        var productname = $(this).find("td").eq(0).html();
+                        var price = parseFloat($(this).find("td").eq(1).html()).toFixed(2);
+                        var orderprice = parseFloat($(this).find("td").eq(2).html()).toFixed(2);
+                        var chequ = parseFloat($(this).find("td").eq(3).html()).toFixed(2);
+                        var cash = parseFloat($(this).find("td").eq(4).html()).toFixed(2);
+                        var qty = $(this).find("td").eq(5).html();
+                        var amount = parseFloat($(this).find("td").eq(6).html()).toFixed(2);
+                        var reason = $(this).find("td").eq(7).html();
+                        //var vatexcise = $(this).find("td").eq(8).html();
+                        //var status = $(this).find("td").eq(9).html();
+                        var status = $(this).find("td").eq(8).html();
+                        newcontent += "<tr >";
+                        newcontent += "<td >" + productname + " </td >";
+                        newcontent += "<td   align='right'>" + price + " </td >";
+                        newcontent += "<td   align='right'>" + orderprice + " </td >";
+                        newcontent += "<td   align='right'>" + chequ + "</td >";
+                        newcontent += "<td   align='right'>" + cash + "</td >";
+                        newcontent += "<td   align='right'>" + qty + " </td >";
+                        newcontent += "<td    align='right'>" + amount + " </td >";
+                        newcontent += "<td   >" + reason + " </td >";
+                        //newcontent += "<td   >" + vatexcise + " </td >";
+                        newcontent += "<td   >" + status + " </td >";
+                        var pid = $(this).find(".pid").val();
+                        var limitprice = $(this).find(".limitprice").val();
+                        var ocs = $(this).find(".OrderCs").val();
+                        var statusId = $(this).find(".StatusId").val();
+                        var designo = $(this).find(".txtDesignno").val();
+                        var size = $(this).find(".txtSize").val();
+                        var grade = $(this).find(".txtGrade").val();
+                        // alert('product id<>item id' + StatusId)
+                        newcontent += "<td   >";
+                        newcontent += "<input type='hidden' class='pid' value=" + pid + " />";
+                        newcontent += "<input type='hidden' id='hidlimitprice' class='limitprice' value=" + limitprice + " />";
+                        newcontent += "<input type='hidden' id='hidOrderCs' class='OrderCs' value=" + ocs + " />";
+                        newcontent += "<input type='hidden' id='hidStatusId' class='StatusId' value=" + statusId + " />";
+                        newcontent += "<input type='hidden' id='txtDesigno' class='txtDesignno' value=" + designo + "/>";
+                        newcontent += "<input type='hidden' id='txtSize' class='txtSize'  value=" + size + "/>";
+                        newcontent += "<input type='hidden' id='txtGrade' class='txtGrade'  value=" + grade + "/>";
+                        newcontent += "<a  class='glyphicon glyphicon-edit edit' style='cursor:pointer;'/>";
+                        newcontent += "<a  class='glyphicon glyphicon-trash delete' style='cursor:pointer;'/>";
+                        newcontent += "</td >";
+                        newcontent += "</tr >";
+                    }
+
+                }
+            });
+
+            if (isItemEdit == false) {
+                if (CheckItemExists(ProductId, ProductName) == false) {
+                    totalamnt = parseFloat(totalamnt) + parseFloat(Amount);
+                    var CrLimit = $('#CreditLimit').val();
+                    if (parseFloat(totalamnt) > parseFloat(CrLimit)) {
+                        Status = "Not Approved by credit limit";
+                        //$('#hidStatusId').val(2);
+                        StatusId = 2;
+                    }
+                    newcontent += "<tr >";
+                    newcontent += "<td >" + ProductName + " </td >";
+                    newcontent += "<td   align='right'>";
+                    newcontent += parseFloat(Price).toFixed(2);
+                    newcontent += "</td >";
+                    newcontent += "<td  align='right'>" + parseFloat(OrderPrice).toFixed(2) + " </td >";
+                    newcontent += "<td   align='right'>" + parseFloat(Chequ).toFixed(2) + "</td >";
+                    newcontent += "<td  align='right'>" + parseFloat(Cash).toFixed(2) + "</td >";
+                    newcontent += "<td    align='right'>" + Qty + " </td >";
+                    newcontent += "<td    align='right'>" + parseFloat(Amount).toFixed(2) + " </td >";
+                    newcontent += "<td   >" + Reason + " </td >";
+                    // newcontent += "<td   >" + VatExcise + " </td >";
+                    newcontent += "<td   >" + Status + " </td >";
+                    newcontent += "<td   >";
+                    newcontent += "<input type='hidden' class='pid' value=" + ProductId + " />";
+                    newcontent += "<input type='hidden' id='hidlimitprice' class='limitprice' value=" + hidlimitprice + " />";
+                    newcontent += "<input type='hidden' id='hidOrderCs' class='OrderCs' value=" + Cs + " />";
+                    newcontent += "<input type='hidden' id='hidStatusId' class='StatusId' value=" + StatusId + " />";
+                    newcontent += "<input type='hidden' id='txtDesigno' class='txtDesignno' value=" + DesignNo + "/>";
+                    newcontent += "<input type='hidden' id='txtSize' class='txtSize'  value=" + Size + "/>";
+                    newcontent += "<input type='hidden' id='txtGrade' class='txtGrade'  value=" + Grade + "/>";
+                    newcontent += "<a  class='glyphicon glyphicon-edit edit' style='cursor:pointer;'/>";
+                    newcontent += "<a  class='glyphicon glyphicon-trash delete' style='cursor:pointer;'/>";
+                    newcontent += "</td >";
+                    newcontent += "</tr >";
+                }
+            }
+            ///calculate total
+            newcontent += "<tr >";
+            newcontent += "<td ></td >";
+            newcontent += "<td  ></td >";
+            newcontent += "<td  ></td >";
+            newcontent += "<td ></td >";
+            newcontent += "<td  ></td >";
+            newcontent += "<td  >Total</td >";
+            newcontent += "<td    align='right'>" + parseFloat(totalamnt).toFixed(2) + " </td >";
+            newcontent += "<td  > </td >";
+            // newcontent += "<td   > </td >";
+            newcontent += "<td   ></td >";
+            newcontent += "<td   ></td >";
+            newcontent += "</tr >";
+            $('#tbodyorder').empty().append(newcontent);
+
+        }
+        ClearAdd();
+    })
+
+    function CheckItemExists(itemid, pname) {
+        var flag = false;
+        $('#tbodyorder tr').each(function () {
+            var itemidinrow = $(this).find('.pid').val();
+            //alert('itemid:' + itemid + 'itemidinrow:' + itemidinrow)
+            if (itemid == itemidinrow) {
+                $('.dvitemexistmsg').html(ShowError(pname, "Item already exist"));
+                flag = true;
+            }
+        });
+        return flag;
+    }
+
+    function ReCalculateTotal() {
+        var newcontent = "";
+        var totalAmount = 0;
+        $('#tbodyorder tr').each(function () {
+            var text = $(this).find("td").eq(5).html();
+
+            if (text != "Total") {
+                var amnt = $(this).find("td").eq(6).html();
+                // alert(amnt+': amnt')
+                totalAmount = parseFloat(totalAmount) + parseFloat(amnt);
+                var amnt = $(this).find("td").eq(6).html();
+                // totalamnt = parseFloat(totalamnt) + parseFloat(amnt);
+                var productname = $(this).find("td").eq(0).html();
+                var price = parseFloat($(this).find("td").eq(1).html()).toFixed(2);
+                var orderprice = parseFloat($(this).find("td").eq(2).html()).toFixed(2);
+                var chequ = parseFloat($(this).find("td").eq(3).html()).toFixed(2);
+                var cash = parseFloat($(this).find("td").eq(4).html()).toFixed(2);
+                var qty = $(this).find("td").eq(5).html();
+                var amount = parseFloat($(this).find("td").eq(6).html()).toFixed(2);
+                var reason = $(this).find("td").eq(7).html();
+                //var vatexcise = $(this).find("td").eq(8).html();
+                //var status = $(this).find("td").eq(9).html();
+                var status = $(this).find("td").eq(8).html();
+                newcontent += "<tr >";
+                newcontent += "<td >" + productname + " </td >";
+                newcontent += "<td   align='right'>" + price + " </td >";
+                newcontent += "<td   align='right'>" + orderprice + " </td >";
+                newcontent += "<td   align='right'>" + chequ + "</td >";
+                newcontent += "<td   align='right'>" + cash + "</td >";
+                newcontent += "<td   align='right'>" + qty + " </td >";
+                newcontent += "<td    align='right'>" + amount + " </td >";
+                newcontent += "<td   >" + reason + " </td >";
+                //newcontent += "<td   >" + vatexcise + " </td >";
+                newcontent += "<td   >" + status + " </td >";
+                var pid = $(this).find(".pid").val();
+                var limitprice = $(this).find(".limitprice").val();
+                var ocs = $(this).find(".OrderCs").val();
+                var statusId = $(this).find(".StatusId").val();
+                var designo = $(this).find(".txtDesignno").val();
+                var size = $(this).find(".txtSize").val();
+                var grade = $(this).find(".txtGrade").val();
+                newcontent += "<td   >";
+                newcontent += "<input type='hidden' class='pid' value=" + pid + " />";
+                newcontent += "<input type='hidden' id='hidlimitprice' class='limitprice' value=" + limitprice + " />";
+                newcontent += "<input type='hidden' id='hidOrderCs' class='OrderCs' value=" + ocs + " />";
+                newcontent += "<input type='hidden' id='hidStatusId' class='StatusId' value=" + statusId + " />";
+                newcontent += "<input type='hidden' id='txtDesigno' class='txtDesignno' value=" + designo + "/>";
+                newcontent += "<input type='hidden' id='txtSize' class='txtSize'  value=" + size + "/>";
+                newcontent += "<input type='hidden' id='txtGrade' class='txtGrade'  value=" + grade + "/>";
+                newcontent += "<a  class='glyphicon glyphicon-edit edit' style='cursor:pointer;'/>";
+                newcontent += "<a  class='glyphicon glyphicon-trash delete' style='cursor:pointer;'/>";
+                newcontent += "</td >";
+                newcontent += "</tr >";
+            }
+
+        });
+        newcontent += "<tr >";
+        newcontent += "<td ></td >";
+        newcontent += "<td  ></td >";
+        newcontent += "<td  ></td >";
+        newcontent += "<td ></td >";
+        newcontent += "<td  ></td >";
+        newcontent += "<td  >Total</td >";
+        newcontent += "<td    align='right'>" + parseFloat(totalAmount).toFixed(2) + " </td >";
+        newcontent += "<td  > </td >";
+        //newcontent += "<td   > </td >";
+        newcontent += "<td   ></td >";
+        newcontent += "<td   ></td >";
+        newcontent += "</tr >";
+
+        $('#tbodyorder').empty().append(newcontent);
+    }
+
+    $("#tbodyorder").on('click', '.delete', function (e) {
+        // e.preventDefault();
+        var tr = $(this).closest('tr');
+        tr.css("background-color", "#FF3700");
+        tr.remove();
+        ReCalculateTotal();
+    })
+
+    $("#tbodyorder").on('click', '.edit', function (e) {
+        e.preventDefault();
+        var tr = $(this).closest('tr');
+
+        var ProductId = tr.find(".pid").val();
+        var ProductName = tr.find("td").eq(0).html();
+        var DesignNo = tr.find(".txtDesigno").val();
+        var Size = tr.find(".txtSize").val();
+        var Grade = tr.find(".txtGrade").val();
+        var Price = tr.find("td").eq(1).html();
+        var OrderPrice = tr.find("td").eq(2).html();
+        var Cheque = tr.find("td").eq(3).html();
+        var Cash = tr.find("td").eq(4).html();
+        var Qty = tr.find("td").eq(5).html();
+        var Amount = tr.find("td").eq(6).html();
+        var Reason = tr.find("td").eq(7).html();
+        //var VatExcise = tr.find("td").eq(8).html();
+        //var Status = tr.find("td").eq(9).html();
+        var Status = $(this).find("td").eq(8).html();
+        var StatusId = tr.find(".StatusId").val();
+        var hidlimitprice = tr.find(".limitprice").val();
+
+        $('#hidolditem').val(ProductId);
+        $('#ProductId').val(ProductId);
+        $('#txtDesignno').val(DesignNo);
+        $('#txtSize').val(Size);
+        $('#txtGrade').val(Grade);
+        $('#txtPrice').val(Price);
+        $('#txtOrderPrice').val(OrderPrice);
+        $('#txtOrderQty').val(Qty);
+        $('#txtOrderAmount').val(Amount);
+        $('#txtCheque').val(Cheque);
+        $('#txtCash').val(Cash);
+        $('#txtReason').val(Reason);
+        //$('#VatExcise').val(VatExcise.trim());
+        $('#txtOrderStatus').val(Status);
+        $('#hidlimitprice').val(hidlimitprice);
+        $('#hidStatusId').val(StatusId);
+        $('#btnupdate').show();
+        $('#btnnew').show();
+        $('#btnadd').hide();
+    })
+
+    function ClearAdd() {
+        $('#ProductId').val('0');
+        $('#txtDesignno').val('').attr("placeholder", "Design no");
+        $('#txtSize').val('');
+        $('#txtGrade').val('');
+        $('#txtPrice').val('');
+        $('#txtOrderPrice').val('0');
+        $('#txtOrderQty').val('1');
+        $('#txtOrderAmount').val('0');
+        $('#txtCheque').val('0');
+        $('#txtCash').val('0').attr("placeholder", "Reason");
+        $('#txtReason').val('');
+        $('#txtOrderStatus').val('').attr("placeholder", "Order status");
+        $('#hidlimitprice').val('0');
+        $('#btnupdate').hide();
+        $('#btnnew').hide();
+        $('#btnadd').show();
+    }
+
+    $('.SaveOrder').on("click", function (e) {
+        e.preventDefault();
+        $(".ajax-loading-block-window").show();
+        var OrderDetl = [];
+        $('#tbodyorder tr').each(function () {
+            var ProductId = $(this).find(".pid").val();
+            var Mrp = $(this).find("td").eq(1).html();
+            var Rate = $(this).find("td").eq(2).html();
+            var Cheque = $(this).find("td").eq(3).html();
+            var Cash = $(this).find("td").eq(4).html();
+            var Qty = $(this).find("td").eq(5).html();
+            var Amount = $(this).find("td").eq(6).html();
+            var Reason = $(this).find("td").eq(7).html();
+            var Cs = $(this).find(".OrderCs").val();
+            //var VatExcise = $(this).find("td").eq(8).html();
+            //var Status = $(this).find("td").eq(9).html();
+            var Status = $(this).find("td").eq(8).html();
+            var PriceLimit = $(this).find(".hidlimitprice").val();
+            var StatusId = $(this).find(".StatusId").val();
+            //alert('  p '+ProductId+' m '+Mrp+' r '+Rate+' q '+Qty+' a  '+Amount+' c  '+Cs+'  s  '+Status+'  p  '+PriceLimit)
+            if (Qty != "Total") {
+                OrderDetl.push({ 'ProductId': ProductId, 'Mrp': Mrp, 'Rate': Rate, 'Cheque': Cheque, 'Cash': Cash, 'Qty': Qty, 'Amount': Amount, 'Cs': Cs, 'Status': Status, 'PriceLimit': PriceLimit, 'Reason': Reason, 'StatusId': StatusId });
+            }
+        });
+        //alert(JSON.stringify(OrderDetl) + '  ' + OrderDetl.length)
+        if (OrderDetl.length > 0) {
+            $('#OrderDetl').val(JSON.stringify(OrderDetl))
+        }
+        var form = "frm";
+        var token = $('input[name="__RequestVerificationToken"]').val();
+        var headers = {};
+        headers['__RequestVerificationToken'] = token;
+        if ($("#" + form).valid()) {
+            $(".ajax-loading-block-window").show();
+            $(".SaveOrder").attr("class", "btn btn-primary SaveOrder disabled");
+
+            $.ajax({
+                url: $("#" + form).attr("action"),
+                type: $("#" + form).attr("method"),
+                data: $("#" + form).serialize(),
+                dataType: "json",
+                headers: headers,
+                success: function (data) {
+                    if (data != null) {
+                        if (data.objResponse.IsSuccess == "false") {
+                            $("#popupError").html(data.objResponse.StrResponse);
+                        }
+                        else {
+                            $("#popupError").html("");
+                            $("#dvMsg").html(data.objResponse.StrResponse);
+                            DataTableInit();
+                            $("#myModal").modal('hide');
+
+                        }
+                    }
+                    $(".ajax-loading-block-window").hide();
+
+                    $(".SaveOrder").attr("class", "btn btn-primary SaveOrder");
+
+                },
+                error: function (xhr, status) {
+                    alert(xhr.responseText);
+                    $(".ajax-loading-block-window").hide();
+                    $(".SaveOrder").attr("class", "btn btn-primary SaveOrder");
+
+                }
+            });
+        }
+        else {
+            //alert('error');
+            $(".ajax-loading-block-window").hide();
+        }
+    })
+</script>

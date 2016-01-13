@@ -1,0 +1,92 @@
+﻿@model Accounts.Model.Model.StoreItems
+
+<div data-role="page">
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+</div>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "storeitems" }))
+{
+    @Html.AntiForgeryToken()
+    <p class="text-danger" id="MessageToClient"></p>
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal" aria-hidden="True">&times;</a>
+        <h4 class="modal-title">Add Store Items</h4>
+    </div>
+    <div class="modal-body">
+        <div class="form-horizontal">
+            @Html.HiddenFor(m => m.StoreId)
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.Code, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Code, new
+               {
+                   htmlAttributes = new
+                       {
+                           @class = "ui-autocomplete-input form-control",
+                           data_url = Url.Action("GetItemsForAutocomplete", "Items")
+                       }
+               })
+                    @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control", onchange = "recalculateExtendedPrice()" } })
+                    @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.UnitPrice, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.UnitPrice, new { htmlAttributes = new { @class = "form-control", onchange = "recalculateExtendedPrice()" } })
+                    @Html.ValidationMessageFor(model => model.UnitPrice, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.UnitId, "UnitId", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("UnitId", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.UnitId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ExtendedPrice, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.ExtendedPrice, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ExtendedPrice, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">Bill No.</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.PurchaseBillId, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.PurchaseBillId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <a class="btn btn-default" data-dismiss="modal">Cancel</a>
+        <input class="btn btn-primary" type="submit" value="Add" />
+    </div>
+}
+
+

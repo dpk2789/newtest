@@ -1,0 +1,89 @@
+﻿@model IEnumerable<Accounts.Web.ViewModel.IssueItemsViewModel>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table id="currentstock" class="table table-hover table-striped table-condensed table-bordered">
+                <thead>
+                    <tr>
+                        <th>
+                            <label>Type</label>
+                        </th>
+                        <th>
+                            <label>Issue Invoice</label>
+                        </th>
+                        <th>
+                            <label>Item Name</label>
+                        </th>
+                        <th class="col-md-2">
+                            @Html.DisplayNameFor(model => model.IssueDate)
+                        </th>
+                        <th class="">
+                            <label>Dept. Name</label>
+                        </th>
+                        <th class="">
+                            <label>Emp. Name</label>
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Remark)
+                        </th>
+                        <th>
+                            <label>Iss. Quantity</label>
+                        </th>
+                        <th>
+                            <label>Inward Quantity</label>
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            @{
+                        if (item.IssueType == "1")
+                        {
+                            <td>
+                                <label>Issue</label>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                <label>Inward</label>
+                            </td>
+                        }
+                            }
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IssueInvoice)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.StoreItems.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IssueDate, "VeryLongDateTime")
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DepartmentName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EmployeeName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Remark)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IssuedQuantity)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.InwardQuantity)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

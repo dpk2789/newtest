@@ -1,0 +1,85 @@
+﻿@model Accounts.Model.Model.PurchaseTaxes
+
+<div data-role="page">
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+</div>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <p class="text-danger" id="MessageToClient"></p>
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal" aria-hidden="True">&times;</a>
+        <h4 class="modal-title">Edit Tax</h4>
+    </div>
+
+    <div class="modal-body">
+        <div class="form-horizontal">
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.Id)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.TaxCode, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.TaxCode, new
+               {
+                   htmlAttributes = new
+                       {
+                           @class = "ui-autocomplete-input form-control",
+                           data_url = Url.Action("GetTaxesForAutocomplete", "Taxes")
+                       }
+               })
+                    @Html.ValidationMessageFor(model => model.TaxCode, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Percent, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Percent, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Percent, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.PurchaseBillId, "PurchaseBillId", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("PurchaseBillId", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.PurchaseBillId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.IsActive, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <div class="checkbox">
+                        @Html.EditorFor(model => model.IsActive)
+                        @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <a class="btn btn-default" data-dismiss="modal">Cancel</a>
+        <input class="btn btn-primary" type="submit" value="Add" />
+    </div>
+
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

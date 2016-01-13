@@ -1,0 +1,86 @@
+﻿@model Accounts.Model.Model.PurchaseBill
+
+<h2>Create Bill</h2>
+<hr />
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.BillInvoice, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.BillInvoice, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.BillInvoice, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.SupplierInvoice, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.SupplierInvoice, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.SupplierInvoice, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.BillDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.BillDate, "DateWithPicker")
+                    @Html.ValidationMessageFor(model => model.BillDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.SupplierId, "SupplierId", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("SupplierId", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.SupplierId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+     
+        @*<div class="row">
+            <div class="col-md-12">
+                <div class="form-group pull-right">
+                    @Html.LabelFor(model => model.TaxWithExtendedPrice, htmlAttributes: new { @class = "control-label col-md-6" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.TaxWithExtendedPrice, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.TaxWithExtendedPrice, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="form-group pull-right">
+                    @Html.LabelFor(model => model.BillTotal, htmlAttributes: new { @class = "control-label col-md-6" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.BillTotal, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.BillTotal, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>*@      
+
+
+        <div class="form-group">
+            <div class="col-md-10">
+                <input type="submit" value="Save" class="btn btn-success" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary btn-xs" })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

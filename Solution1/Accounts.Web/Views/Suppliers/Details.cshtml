@@ -1,0 +1,194 @@
+﻿@model Accounts.Model.Model.Supplier
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Supplier</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.AccountName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AccountName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Age)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Age)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Gender)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Gender)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DateOfBirth)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateOfBirth)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FathersName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FathersName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CustomerType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CustomerType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PlotNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PlotNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StreetName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StreetName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LandMark)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LandMark)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Colony)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Colony)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.City)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.City)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.State)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.State)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ZipCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ZipCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Mobile)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Mobile)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EmpergencyContact)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EmpergencyContact)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MainImageName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MainImageName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ImageExtention)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ImageExtention)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsActive)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsActive)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,18 @@
+﻿@model TimeSpan?
+@Html.TextBox("", (Model.HasValue ? Model.Value.ToString() :string.Empty), new { @class = "date  form-control inTime " })
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.datetimepicker6').datetimepicker({
+            //format: 'LT',
+            format: 'hh:mm',
+            //daysOfWeekDisabled: [0, 6]
+        });
+    });
+</script>
+
+
+
+
+
+

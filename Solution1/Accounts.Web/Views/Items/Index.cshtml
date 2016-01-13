@@ -1,0 +1,154 @@
+﻿@model IEnumerable<Accounts.Model.Model.ItemCategory>
+
+<h2>Items</h2>
+<hr />
+<style>
+    .nav-tabs li a:focus,
+    .panel-heading a:focus {
+        outline: none;
+    }
+
+    .panel-heading a,
+    .panel-heading a:hover,
+    .panel-heading a:focus {
+        text-decoration: none;
+        color: #777777;
+    }
+
+    .faq-cat-content .panel-heading:hover {
+        background-color: #efefef;
+    }
+
+    .active-faq {
+        border-left: 5px solid #888888;
+    }
+
+    .panel-faq .panel-heading .panel-title span {
+        font-size: 13px;
+        font-weight: normal;
+    }
+</style>
+<div class="row">
+    @Html.ActionLink("Create Item", "Create", null, new { @class = "btn btn-success btn-xs" }) |
+    @Html.ActionLink("Create Compound Item", "Create", "CompoundItemIngredients", null, new { @class = "btn btn-success btn-xs" })
+   
+</div>
+
+<br />
+@*<div class="panel-group" id="accordion-cat-1">
+        @foreach (var category in Model)
+        {
+            <div class="panel panel-default panel-faq">
+                <div class="panel-heading">
+
+                    <a data-toggle="collapse" data-parent="#accordion-cat-1" href="#@(category.Id)_faq-cat-1-sub-1">
+                        <h4 class="panel-title">
+                            @category.CategoryName
+                            <span class="pull-right"><i class="glyphicon glyphicon-plus"></i></span>
+                        </h4>
+                    </a>
+
+
+                </div>
+
+                <div id="@(category.Id)_faq-cat-1-sub-1" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped table-condensed table-bordered">
+                                <tr>
+                                    <th>
+                                        <label>Code</label>
+                                    </th>
+                                    <th>
+                                        <label>Name</label>
+                                    </th>
+                                    <th>
+                                        <label>Unit</label>
+                                    </th>
+                                    <th>
+                                        <label>Unit Price</label>
+                                    </th>
+                                    <th>
+                                        <p>
+                                            @Html.ActionLink("Create Item", "Create", null, new { @class = "btn btn-success btn-xs" })
+                                        </p>
+                                    </th>
+                                </tr>
+                                @foreach (var item in category.Items)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Code)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Unit.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.UnitPrice)
+                                        </td>
+                                        <td>
+                                            @Html.ActionLink("Details", "Edit", "Items", new { id = item.Id }, new { @class = "btn btn-default btn-xs" }) |
+                                            @Html.ActionLink("Delete", "Delete", "Items", new { id = item.Id }, new { @class = "btn btn-danger btn-xs" })
+                                        </td>
+                                    </tr>
+                                }
+
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+
+    </div>*@
+
+
+
+
+
+@foreach (var category in Model)
+{
+    <ul>
+        <li>
+            @category.CategoryName
+
+            <ul>
+                <li>
+                    <table class="table table-hover table-striped table-condensed table-bordered">
+
+                        @foreach (var item in category.Items)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Code)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Unit.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.UnitPrice)
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Details", "Edit", "Items", new { id = item.Id }, new { @class = "btn btn-default btn-xs" }) |
+                                    @Html.ActionLink("Delete", "Delete", "Items", new { id = item.Id }, new { @class = "btn btn-danger btn-xs" })
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </li>
+            </ul>
+
+        </li>
+
+    </ul>
+}
+
+

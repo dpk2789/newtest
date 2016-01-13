@@ -1,0 +1,188 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8EB085AD-38D5-4426-A0CE-719E5A4CE1BA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Accounts.Context</RootNamespace>
+    <AssemblyName>Accounts.Context</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApplicationDbContext.cs" />
+    <Compile Include="Configuration\AutomaticInvoiceFormConfiguration.cs" />
+    <Compile Include="Configuration\CompoundItemIngredientConfiguration.cs" />
+    <Compile Include="Configuration\IssueItemsConfiguration.cs" />
+    <Compile Include="Configuration\ItemCategoryConfiguration.cs" />
+    <Compile Include="Configuration\ItemConfiguration.cs" />
+    <Compile Include="Configuration\PurchaseBillConfiguration.cs" />
+    <Compile Include="Configuration\PurchaseItemsConfiguration.cs" />
+    <Compile Include="Configuration\PurchaseTaxesConfiguration.cs" />
+    <Compile Include="Configuration\SettingsConfiguration.cs" />
+    <Compile Include="Configuration\StoreCategoryConfiguration.cs" />
+    <Compile Include="Configuration\StoreConfiguration.cs" />
+    <Compile Include="Configuration\StoreItemsConfiguration.cs" />
+    <Compile Include="Configuration\SupplierConfiguration.cs" />
+    <Compile Include="Configuration\TaxCategoriesConfiguration.cs" />
+    <Compile Include="Configuration\TaxConfiguration.cs" />
+    <Compile Include="Configuration\UnitConfiguration.cs" />
+    <Compile Include="Configuration\WareHouseConfiguration.cs" />
+    <Compile Include="Migrations\201512311013290_Initial.cs" />
+    <Compile Include="Migrations\201512311013290_Initial.Designer.cs">
+      <DependentUpon>201512311013290_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201512311043051_AddedIssueInvoiceUnique.cs" />
+    <Compile Include="Migrations\201512311043051_AddedIssueInvoiceUnique.Designer.cs">
+      <DependentUpon>201512311043051_AddedIssueInvoiceUnique.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601010852097_AddedIssueType.cs" />
+    <Compile Include="Migrations\201601010852097_AddedIssueType.Designer.cs">
+      <DependentUpon>201601010852097_AddedIssueType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601011012268_AddedInwardQuantityNInwardInvoice.cs" />
+    <Compile Include="Migrations\201601011012268_AddedInwardQuantityNInwardInvoice.Designer.cs">
+      <DependentUpon>201601011012268_AddedInwardQuantityNInwardInvoice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601011115095_NewChanges.cs" />
+    <Compile Include="Migrations\201601011115095_NewChanges.Designer.cs">
+      <DependentUpon>201601011115095_NewChanges.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601011121585_NewChanges1.cs" />
+    <Compile Include="Migrations\201601011121585_NewChanges1.Designer.cs">
+      <DependentUpon>201601011121585_NewChanges1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601011150287_UnikeyKeyFalseInIssueType.cs" />
+    <Compile Include="Migrations\201601011150287_UnikeyKeyFalseInIssueType.Designer.cs">
+      <DependentUpon>201601011150287_UnikeyKeyFalseInIssueType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601090650114_AddedSettingsNAutomaticInvoiceForm.cs" />
+    <Compile Include="Migrations\201601090650114_AddedSettingsNAutomaticInvoiceForm.Designer.cs">
+      <DependentUpon>201601090650114_AddedSettingsNAutomaticInvoiceForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601090800213_AddingAutomaticInvoice.cs" />
+    <Compile Include="Migrations\201601090800213_AddingAutomaticInvoice.Designer.cs">
+      <DependentUpon>201601090800213_AddingAutomaticInvoice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601090912253_DoubleNullOfNumberingInAutomaticInvoice.cs" />
+    <Compile Include="Migrations\201601090912253_DoubleNullOfNumberingInAutomaticInvoice.Designer.cs">
+      <DependentUpon>201601090912253_DoubleNullOfNumberingInAutomaticInvoice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601091122290_AddedCompoundItemNItemTypeInItem.cs" />
+    <Compile Include="Migrations\201601091122290_AddedCompoundItemNItemTypeInItem.Designer.cs">
+      <DependentUpon>201601091122290_AddedCompoundItemNItemTypeInItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601091131481_AddedCompoundItemId.cs" />
+    <Compile Include="Migrations\201601091131481_AddedCompoundItemId.Designer.cs">
+      <DependentUpon>201601091131481_AddedCompoundItemId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601130711420_RelationBtwItemNIngridients.cs" />
+    <Compile Include="Migrations\201601130711420_RelationBtwItemNIngridients.Designer.cs">
+      <DependentUpon>201601130711420_RelationBtwItemNIngridients.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601130844386_AddedIngredientNameNIdInCompound.cs" />
+    <Compile Include="Migrations\201601130844386_AddedIngredientNameNIdInCompound.Designer.cs">
+      <DependentUpon>201601130844386_AddedIngredientNameNIdInCompound.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201512311013290_Initial.resx">
+      <DependentUpon>201512311013290_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201512311043051_AddedIssueInvoiceUnique.resx">
+      <DependentUpon>201512311043051_AddedIssueInvoiceUnique.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601010852097_AddedIssueType.resx">
+      <DependentUpon>201601010852097_AddedIssueType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601011012268_AddedInwardQuantityNInwardInvoice.resx">
+      <DependentUpon>201601011012268_AddedInwardQuantityNInwardInvoice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601011115095_NewChanges.resx">
+      <DependentUpon>201601011115095_NewChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601011121585_NewChanges1.resx">
+      <DependentUpon>201601011121585_NewChanges1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601011150287_UnikeyKeyFalseInIssueType.resx">
+      <DependentUpon>201601011150287_UnikeyKeyFalseInIssueType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601090650114_AddedSettingsNAutomaticInvoiceForm.resx">
+      <DependentUpon>201601090650114_AddedSettingsNAutomaticInvoiceForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601090800213_AddingAutomaticInvoice.resx">
+      <DependentUpon>201601090800213_AddingAutomaticInvoice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601090912253_DoubleNullOfNumberingInAutomaticInvoice.resx">
+      <DependentUpon>201601090912253_DoubleNullOfNumberingInAutomaticInvoice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601091122290_AddedCompoundItemNItemTypeInItem.resx">
+      <DependentUpon>201601091122290_AddedCompoundItemNItemTypeInItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601091131481_AddedCompoundItemId.resx">
+      <DependentUpon>201601091131481_AddedCompoundItemId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601130711420_RelationBtwItemNIngridients.resx">
+      <DependentUpon>201601130711420_RelationBtwItemNIngridients.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601130844386_AddedIngredientNameNIdInCompound.resx">
+      <DependentUpon>201601130844386_AddedIngredientNameNIdInCompound.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

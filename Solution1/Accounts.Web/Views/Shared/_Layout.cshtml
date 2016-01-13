@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <link href="~/Content/themes/base/all.css" rel="stylesheet" />
+    <link href="~/Content/DataTables/css/jquery.dataTables.css" rel="stylesheet" />
+    <link href="~/Content/DataTables/css/buttons.dataTables.css" rel="stylesheet" />
+    @Scripts.Render("~/bundles/modernizr")
+    <script src="~/Scripts/jquery-2.1.4.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.11.4.min.js"></script>
+
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Contacts<span class="glyphicon glyphicon-user"></span></a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Suppliers", "Index", "Suppliers")</li>
+                            <li>@Html.ActionLink("Customers", "Index", "Customers")</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Purchase<span class="glyphicon glyphicon-gift"></span></a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Bills", "Index", "PurchaseBills")</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Stock<span class="glyphicon glyphicon-home"></span></a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("WareHouses", "Index", "WareHouses")</li>
+                            <li>@Html.ActionLink("Store Categories", "Index", "StoreCategories")</li>
+                            <li>@Html.ActionLink("Stores", "Index", "Stores")</li>
+                            <li role="separator" class="divider"></li>
+                            <li>@Html.ActionLink("Item Categories", "Index", "ItemCategories")</li>                           
+                            <li>@Html.ActionLink("Unit", "Index", "Units")</li>
+                            <li>@Html.ActionLink("Item", "Index", "Items")</li>
+                            <li>@Html.ActionLink("Compound Item", "Index", "Items")</li>
+                            <li role="separator" class="divider"></li>
+                            <li>@Html.ActionLink("Current Stock", "CurrentStock", "IssueItems")</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Taxation<span class="glyphicon glyphicon-book"></span></a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Category", "Index", "TaxCategories")</li>
+                            <li>@Html.ActionLink("Tax", "Index", "Taxes")</li>
+                            <li role="separator" class="divider"></li>
+                            <li>@Html.ActionLink("Current Stock", "Index", "Items")</li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#">One more separated link</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Settings<span class="glyphicon glyphicon-cog"></span></a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Automatic Purchase Invoice", "Edit", "AutomaticInvoiceForms", new { type = "Purchase" }, null)</li>                            
+                        </ul>
+                    </li>
+                </ul>
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        </footer>
+    </div>
+
+
+
+    <script src="~/Scripts/DataTables/jquery.dataTables.js"></script>
+    <script src="~/Scripts/DataTables/dataTables.buttons.js"></script>
+    <script src="~/Scripts/DataTables/buttons.flash.js"></script>
+    <script src="~/Scripts/jszip.min.js"></script>
+    <script src="~/Scripts/pdfmake.min.js"></script>
+    <script src="~/Scripts/vfs_fonts.js"></script>
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+        <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+        <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>*@
+    <script src="~/Scripts/DataTables/buttons.html5.js"></script>
+    <script src="~/Scripts/DataTables/buttons.print.js"></script>
+
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+
+</html>

@@ -1,0 +1,71 @@
+﻿@model IEnumerable<Accounts.Web.ViewModel.PurchaseBillViewModel>
+
+<script>
+    $(document).ready(function () {
+        $(document).ready(function () {
+            $('#purchasebilltable').DataTable({
+                dom: 'Blfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+            });
+        });
+    });
+</script>
+
+<div class="table-responsive">
+    <table id="purchasebilltable" class="table table-hover table-striped table-condensed table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Supplier.AccountName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BillInvoice)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SupplierInvoice)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BillDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BillTotal)
+                </th>
+                <th>
+                    <p>
+                        @Html.ActionLink("Create Bill", "Create", null, new { @class = "btn btn-success btn-xs" })
+                    </p>
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Supplier.AccountName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BillInvoice)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SupplierInvoice)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BillDate, "VeryLongDate")
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BillTotal, "CustomNumberFormat")
+                    </td>
+                    <td>
+                        @Html.ActionLink("Details", "Edit", "PurchaseBills", new { id = item.Id }, new { @class = "btn btn-default btn-xs" }) |
+                        @Html.ActionLink("Delete", "Delete", "PurchaseBills", new { id = item.Id }, new { @class = "btn btn-danger btn-xs" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+</div>
