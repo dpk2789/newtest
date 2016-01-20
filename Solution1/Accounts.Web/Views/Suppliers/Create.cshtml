@@ -4,9 +4,7 @@
 <h2>Create Supplier</h2>
 <hr />
 
-
-
-@using (Html.BeginForm("Create", "Suppliers", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+@using (Html.BeginForm("Create", "Suppliers", FormMethod.Post, new {id="supplierForm", @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
 
@@ -19,7 +17,6 @@
             <li><a data-toggle="tab" href="#Address">Address</a></li>
             <li><a data-toggle="tab" href="#Contact">Contact </a></li>
             <li><a data-toggle="tab" href="#TaxDetail">Tax Detail </a></li>
-
         </ul>
 
         <div class="tab-content">
@@ -261,3 +258,4 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+

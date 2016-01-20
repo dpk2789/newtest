@@ -69,6 +69,7 @@
     <Compile Include="Configuration\TaxCategoriesConfiguration.cs" />
     <Compile Include="Configuration\TaxConfiguration.cs" />
     <Compile Include="Configuration\UnitConfiguration.cs" />
+    <Compile Include="Configuration\UnitRelationsConfiguration.cs" />
     <Compile Include="Configuration\WareHouseConfiguration.cs" />
     <Compile Include="Migrations\201512311013290_Initial.cs" />
     <Compile Include="Migrations\201512311013290_Initial.Designer.cs">
@@ -126,6 +127,26 @@
     <Compile Include="Migrations\201601130844386_AddedIngredientNameNIdInCompound.Designer.cs">
       <DependentUpon>201601130844386_AddedIngredientNameNIdInCompound.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201601140841012_UnitInCompoundIngridient.cs" />
+    <Compile Include="Migrations\201601140841012_UnitInCompoundIngridient.Designer.cs">
+      <DependentUpon>201601140841012_UnitInCompoundIngridient.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601141034164_AddedDateInStoreItems.cs" />
+    <Compile Include="Migrations\201601141034164_AddedDateInStoreItems.Designer.cs">
+      <DependentUpon>201601141034164_AddedDateInStoreItems.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601160701207_AddedPurchaseItemIdInStoreItems.cs" />
+    <Compile Include="Migrations\201601160701207_AddedPurchaseItemIdInStoreItems.Designer.cs">
+      <DependentUpon>201601160701207_AddedPurchaseItemIdInStoreItems.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601190801203_TypeAddedInStoreItems.cs" />
+    <Compile Include="Migrations\201601190801203_TypeAddedInStoreItems.Designer.cs">
+      <DependentUpon>201601190801203_TypeAddedInStoreItems.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601191018066_AddedUnitRelation.cs" />
+    <Compile Include="Migrations\201601191018066_AddedUnitRelation.Designer.cs">
+      <DependentUpon>201601191018066_AddedUnitRelation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -176,6 +197,27 @@
     <EmbeddedResource Include="Migrations\201601130844386_AddedIngredientNameNIdInCompound.resx">
       <DependentUpon>201601130844386_AddedIngredientNameNIdInCompound.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601140841012_UnitInCompoundIngridient.resx">
+      <DependentUpon>201601140841012_UnitInCompoundIngridient.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601141034164_AddedDateInStoreItems.resx">
+      <DependentUpon>201601141034164_AddedDateInStoreItems.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601160701207_AddedPurchaseItemIdInStoreItems.resx">
+      <DependentUpon>201601160701207_AddedPurchaseItemIdInStoreItems.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601190801203_TypeAddedInStoreItems.resx">
+      <DependentUpon>201601190801203_TypeAddedInStoreItems.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601191018066_AddedUnitRelation.resx">
+      <DependentUpon>201601191018066_AddedUnitRelation.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Accounts.Model\Accounts.Model.csproj">
+      <Project>{f583a1ff-5f1d-4995-9162-6c0c66f4bc3d}</Project>
+      <Name>Accounts.Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

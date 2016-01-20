@@ -16,7 +16,7 @@ namespace Accounts.Web.Controllers
     public class PurchaseItemsController : Controller
     {
         private ApplicationDbContext _dbContext = new ApplicationDbContext();
-        public ActionResult Index(Guid? purchaseBillId)
+        public ActionResult Index(Guid? purchaseBillId, DateTime? puchaseBillDate)
         {
             decimal? itemTotal = 0;
             decimal? quantityTotal = 0;
@@ -35,6 +35,7 @@ namespace Accounts.Web.Controllers
             ViewBag.QuantityTotal = quantityTotal;
             ViewBag.ItemExtentedPriceTotal = itemTotal;
             ViewBag.purchaseBillId = purchaseBillId;
+            ViewBag.purchaseBillDate = puchaseBillDate;
             return PartialView("_Index", viewModel.ToList());
         }
 
@@ -52,7 +53,7 @@ namespace Accounts.Web.Controllers
             return View(purchaseItems);
         }
 
-        public ActionResult Create(Guid purchaseBillId)
+        public ActionResult Create(Guid purchaseBillId, DateTime puchaseBillDate)
         {
             PurchaseItemsViewModel viewModel = new PurchaseItemsViewModel();
             ViewBag.WareHouseId = new SelectList(_dbContext.WareHouses, "Id", "Name");
@@ -60,19 +61,21 @@ namespace Accounts.Web.Controllers
             ViewBag.UnitId = new SelectList(_dbContext.Units, "Id", "Name");
             ViewBag.StoreId = new SelectList(_dbContext.Store, "Id", "Name");
             viewModel.PurchaseBillId = purchaseBillId;
+            viewModel.PurchaseBillDate = puchaseBillDate;
             return PartialView("_Create", viewModel);
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Code,Name,Quantity,UnitPrice,UnitId,PurchaseBillId,StoreId")] PurchaseItemsViewModel viewModel)
+        public ActionResult Create([Bind(Include = "Id,Code,Name,Quantity,UnitPrice,UnitId,PurchaseBillId,StoreId,PurchaseBillDate")] PurchaseItemsViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
                 StoreItems storeItems = new StoreItems();
                 PurchaseItems purchaseItems = Mapper.Map<PurchaseItems>(viewModel);
-                purchaseItems.Id = Guid.NewGuid();
+                Guid purchaseItemid = Guid.NewGuid();
+                purchaseItems.Id = purchaseItemid;
                 storeItems.Id = Guid.NewGuid();
                 storeItems.Code = viewModel.Code;
                 storeItems.Name = viewModel.Name;
@@ -84,6 +87,9 @@ namespace Accounts.Web.Controllers
                 storeItems.Unit = viewModel.Unit;
                 storeItems.UnitId = viewModel.UnitId;
                 storeItems.BalanceQuantity = viewModel.Quantity;
+                storeItems.ItemAddedDate = viewModel.PurchaseBillDate;
+                storeItems.PurchaseItemsId = purchaseItemid;
+                storeItems.Type = "Inward";
 
                 _dbContext.StoreItems.Add(storeItems);
                 _dbContext.PurchaseItems.Add(purchaseItems);
@@ -97,7 +103,7 @@ namespace Accounts.Web.Controllers
             return View(viewModel);
         }
 
-        public ActionResult Edit(Guid? id)
+        public ActionResult Edit(Guid? id, DateTime puchaseBillDate)
         {
             if (id == null)
             {
@@ -112,23 +118,26 @@ namespace Accounts.Web.Controllers
             ViewBag.PurchaseBillId = new SelectList(_dbContext.PurchaseBills, "Id", "BillInvoice", purchaseItems.PurchaseBillId);
             ViewBag.UnitId = new SelectList(_dbContext.Units, "Id", "Name", purchaseItems.UnitId);
             ViewBag.StoreId = new SelectList(_dbContext.Store, "Id", "Name", purchaseItems.StoreId);
+            viewModel.PurchaseBillDate = puchaseBillDate;
             return PartialView("_Edit", viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Code,Name,Quantity,UnitPrice,UnitId,WareHouseId,PurchaseBillId,StoreId")] PurchaseItemsViewModel viewModel)
+        public ActionResult Edit([Bind(Include = "Id,Code,Name,Quantity,UnitPrice,UnitId,WareHouseId,PurchaseBillId,StoreId,PurchaseBillDate")] PurchaseItemsViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
                 PurchaseItems purchaseItems = Mapper.Map<PurchaseItems>(viewModel);
-                StoreItems storeItems = _dbContext.StoreItems.Where(si => si.PurchaseBillId == purchaseItems.PurchaseBillId && si.StoreId == purchaseItems.StoreId).FirstOrDefault();
+               // StoreItems storeItems = _dbContext.StoreItems.Where(si => si.PurchaseBillId == purchaseItems.PurchaseBillId && si.StoreId == purchaseItems.StoreId).FirstOrDefault();
+                StoreItems storeItems = _dbContext.StoreItems.Where(si=>si.PurchaseItemsId==viewModel.Id).FirstOrDefault();
                 storeItems.Code = viewModel.Code;
-                storeItems.Name = viewModel.Name;                
+                storeItems.Name = viewModel.Name;
                 storeItems.Quantity = viewModel.Quantity;
                 storeItems.UnitPrice = viewModel.UnitPrice;
                 storeItems.ExtendedPrice = viewModel.ExtendedPrice;
                 storeItems.BalanceQuantity = viewModel.Quantity;
+                storeItems.ItemAddedDate = viewModel.PurchaseBillDate;
 
                 _dbContext.Entry(purchaseItems).State = EntityState.Modified;
                 _dbContext.Entry(storeItems).State = EntityState.Modified;
@@ -161,9 +170,11 @@ namespace Accounts.Web.Controllers
         public ActionResult DeleteConfirmed(Guid id)
         {
             PurchaseItems purchaseItems = _dbContext.PurchaseItems.Find(id);
+            StoreItems storeItems = _dbContext.StoreItems.Where(si => si.PurchaseItemsId == id).FirstOrDefault();
             try
             {
                 _dbContext.PurchaseItems.Remove(purchaseItems);
+                _dbContext.StoreItems.Remove(storeItems);
                 _dbContext.SaveChanges();
                 return Json(new { success = true });
             }

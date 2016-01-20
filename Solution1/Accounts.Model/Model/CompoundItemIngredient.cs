@@ -14,5 +14,7 @@ namespace Accounts.Model.Model
         public Guid IngridentId { get; set; }
         public string IngridentName { get; set; }      
         public decimal UnitQuantity { get; set; }
+        public Guid IngridentUnitId { get; set; }
+        public virtual Unit Unit { get; set; }
     }
 }

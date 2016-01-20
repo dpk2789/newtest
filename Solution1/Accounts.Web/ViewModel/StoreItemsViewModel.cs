@@ -10,6 +10,7 @@ namespace Accounts.Web.ViewModel
     public class StoreItemsViewModel
     {
         public Guid Id { get; set; }
+        public DateTime? ItemAddedDate { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
         public decimal Quantity { get; set; }

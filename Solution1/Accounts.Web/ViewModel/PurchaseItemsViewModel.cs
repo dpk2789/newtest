@@ -18,6 +18,7 @@ namespace Accounts.Web.ViewModel
         public Guid UnitId { get; set; }
         public virtual Unit Unit { get; set; }
         public Guid PurchaseBillId { get; set; }
+        public DateTime PurchaseBillDate { get; set; }
         public Guid StoreId { get; set; }
         public virtual PurchaseBill PurchaseBill { get; set; }
         public decimal? ItemExtentedPriceTotal { get; set; }

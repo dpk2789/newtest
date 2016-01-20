@@ -42,6 +42,7 @@ namespace Accounts.Context
         public DbSet<Settings> Settings { get; set; }
         public DbSet<AutomaticInvoiceForm> AutomaticInvoiceForm { get; set; }
         public DbSet<CompoundItemIngredient> CompoundItemIngredients { get; set; }
+        public DbSet<UnitRelations> UnitRelations { get; set; }
         protected override void OnModelCreating(System.Data.Entity.DbModelBuilder modelBuilder)
         {
             modelBuilder.Configurations.Add(new SupplierConfiguration());
@@ -61,6 +62,7 @@ namespace Accounts.Context
             modelBuilder.Configurations.Add(new SettingsConfiguration());
             modelBuilder.Configurations.Add(new AutomaticInvoiceFormConfiguration());
             modelBuilder.Configurations.Add(new CompoundItemIngredientConfiguration());
+            modelBuilder.Configurations.Add(new UnitRelationsConfiguration());
             base.OnModelCreating(modelBuilder);
         }
 

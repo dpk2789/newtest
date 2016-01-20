@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Accounts.Web.ViewModel.IssueItemsViewModel>
+﻿@model IEnumerable<Accounts.Web.ViewModel.StockBookViewModel>
 
 <div class="panel panel-default">
     <div class="panel-body">
@@ -6,32 +6,32 @@
             <table id="currentstock" class="table table-hover table-striped table-condensed table-bordered">
                 <thead>
                     <tr>
+                        <th class="col-md-2">
+                            @Html.DisplayNameFor(model => model.ItemAddedDate)
+                        </th>
                         <th>
                             <label>Type</label>
                         </th>
                         <th>
-                            <label>Issue Invoice</label>
-                        </th>
-                        <th>
                             <label>Item Name</label>
                         </th>
-                        <th class="col-md-2">
-                            @Html.DisplayNameFor(model => model.IssueDate)
-                        </th>
-                        <th class="">
-                            <label>Dept. Name</label>
-                        </th>
-                        <th class="">
-                            <label>Emp. Name</label>
+                        <th>
+                            <label>Quantity</label>
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.Remark)
+                            <label>Unit Price</label>
                         </th>
                         <th>
-                            <label>Iss. Quantity</label>
+                            <label>Amount</label>
                         </th>
                         <th>
-                            <label>Inward Quantity</label>
+                            <label>Issue Quantity</label>
+                        </th>
+                        <th>
+                            <label>Balance Quantity</label>
+                        </th>
+                        <th>
+                            <label>Remark</label>
                         </th>
                     </tr>
                 </thead>
@@ -40,44 +40,32 @@
                     @foreach (var item in Model)
                     {
                         <tr>
-                            @{
-                        if (item.IssueType == "1")
-                        {
                             <td>
-                                <label>Issue</label>
-                            </td>
-                        }
-                        else
-                        {
-                            <td>
-                                <label>Inward</label>
-                            </td>
-                        }
-                            }
-
-                            <td>
-                                @Html.DisplayFor(modelItem => item.IssueInvoice)
+                                @Html.DisplayFor(modelItem => item.ItemAddedDate, "ShortDateFormat")
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.StoreItems.Name)
+                                @Html.DisplayFor(modelItem => item.Type)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.IssueDate, "VeryLongDateTime")
+                                @Html.DisplayFor(modelItem => item.Name)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.DepartmentName)
+                                @Html.DisplayFor(modelItem => item.Quantity)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.EmployeeName)
+                                @Html.DisplayFor(modelItem => item.UnitPrice)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Remark)
+                                @Html.DisplayFor(modelItem => item.ExtendedPrice)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.IssuedQuantity)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.InwardQuantity)
+                                @Html.DisplayFor(modelItem => item.BalanceQuantity)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Remark)
                             </td>
                         </tr>
                     }
@@ -87,3 +75,17 @@
     </div>
 </div>
 
+<script>
+    $(document).ready(function () {
+        $(document).ready(function () {
+            $('#currentstock').DataTable({
+                dom: 'Blfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+            });
+        });
+    });
+
+  
+</script>

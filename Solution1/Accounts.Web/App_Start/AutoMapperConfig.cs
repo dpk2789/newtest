@@ -25,6 +25,10 @@ namespace Accounts.Web
             AutoMapper.Mapper.CreateMap<PurchaseBillViewModel, PurchaseBill>();
             AutoMapper.Mapper.CreateMap<AutomaticInvoiceForm, AutomaticInvoiceFormViewModel>();
             AutoMapper.Mapper.CreateMap<AutomaticInvoiceFormViewModel, AutomaticInvoiceForm>();
+            AutoMapper.Mapper.CreateMap<StoreItems, StockBookViewModel>();
+            AutoMapper.Mapper.CreateMap<StockBookViewModel, StoreItems>();
+            AutoMapper.Mapper.CreateMap<Item, ItemViewModel>();
+            AutoMapper.Mapper.CreateMap<ItemViewModel, Item>();
         }
     }
 }

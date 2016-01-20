@@ -12,89 +12,93 @@
         <a class="close" data-dismiss="modal" aria-hidden="True">&times;</a>
         <h4 class="modal-title">Issue Items</h4>
     </div>
-    <div class="modal-body">
+    <div class="modal-body" style="width:1280px; height:500px">
         <div class="form-horizontal">
             @Html.HiddenFor(m => m.StoreItemsId)
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-            <div class="form-group form-group-sm">
-                @Html.LabelFor(model => model.IssueType, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-8">
-                    @Html.DropDownListFor(model => model.IssueType, ViewBag.IssueType as List<SelectListItem>, htmlAttributes: new { @class = "form-control col-md-2" })
-                    @Html.ValidationMessageFor(model => model.IssueType, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group form-group-sm">
-                @Html.LabelFor(model => model.IssueInvoice, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-8">
-                    @Html.EditorFor(model => model.IssueInvoice, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.IssueInvoice, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group form-group-sm">
-                <label class="control-label col-md-2">Item Name</label>
-                <div class="col-md-8">
-                    @Html.TextBox("ItemName", (string)@ViewBag.ItemName, new { @class = "form-control", @readonly = true })
-                    @Html.ValidationMessageFor(model => model.StoreItems.Name, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group form-group-sm">
-                @Html.LabelFor(model => model.IssueDate, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-8">
-                    @Html.EditorFor(model => model.IssueDate, "EditorDate")
-                </div>
-            </div>
-
-            <div class="form-group form-group-sm">
-                @Html.LabelFor(model => model.DepartmentName, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-8">
-                    @Html.EditorFor(model => model.DepartmentName, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.DepartmentName, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group form-group-sm">
-                @Html.LabelFor(model => model.EmployeeName, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-8">
-                    @Html.EditorFor(model => model.EmployeeName, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.EmployeeName, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group form-group-sm">
-                @Html.LabelFor(model => model.IssuedQuantity, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.IssuedQuantity, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.IssuedQuantity, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group form-group-sm">
-                @Html.LabelFor(model => model.RemainingItem, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.RemainingItem, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.RemainingItem, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group form-group-sm">
-                @Html.LabelFor(model => model.Remark, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Remark, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            @*<div class="form-group">
-                    @Html.LabelFor(model => model.StoreItemsId, "StoreItemsId", htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.DropDownList("StoreItemsId", null, htmlAttributes: new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.StoreItemsId, "", new { @class = "text-danger" })
+            <div class="col-md-6">
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.IssueType, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-8">
+                        @Html.DropDownListFor(model => model.IssueType, ViewBag.IssueType as List<SelectListItem>, htmlAttributes: new { @class = "form-control col-md-2" })
+                        @Html.ValidationMessageFor(model => model.IssueType, "", new { @class = "text-danger" })
                     </div>
-                </div>*@
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.IssueInvoice, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.IssueInvoice, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.IssueInvoice, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    <label class="control-label col-md-2">Item Name</label>
+                    <div class="col-md-8">
+                        @Html.TextBox("ItemName", (string)@ViewBag.ItemName, new { @class = "form-control", @readonly = true })
+                        @Html.ValidationMessageFor(model => model.StoreItems.Name, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.IssueDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.IssueDate, "EditorDate")
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.IssuedQuantity, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.IssuedQuantity, new { htmlAttributes = new { @class = "form-control issueQuantity" } })
+                        @Html.ValidationMessageFor(model => model.IssuedQuantity, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.RemainingItem, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.RemainingItem, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.RemainingItem, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.DepartmentName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.DepartmentName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.DepartmentName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.EmployeeName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.EmployeeName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.EmployeeName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.Remark, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Remark, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div id="loading" class="loadinggif"></div>
+            <input class="btn btn-primary callitems col-md-offset-1" type="submit" value="Other Items Req." />
+
+            <div class="panel-body">
+                <div id="purchasedata">
+                    @{ Html.RenderAction("OtherItemsReq", "StoreItems");}
+                </div>
+            </div>
 
         </div>
     </div>
@@ -104,4 +108,43 @@
     </div>
 }
 
+<script>
+    $(function () {
+        $("#issueitems").validate({
+            rules: {
+                IssueInvoice: "required",
+                IssuedQuantity: "required",
+            },
+            messages: {
+                IssueInvoice: "Please enter IssueInvoice",
+                IssuedQuantity: "Please enter  IssuedQuantity",
+
+            },
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+
+    });
+    $('.callitems').on("click", function (e) {
+        $('#loading').html('<img src="/Images/default.gif" /> loading...');
+        var ItemName = $('#ItemName').val();
+        var IssuedQuantity = $('.issueQuantity').val();
+
+        $.ajax({
+            url: "@Url.Action("OtherItemsReq", "StoreItems")",
+            type: "POST",
+            data: { ItemName: ItemName, IssuedQuantity: IssuedQuantity },
+            success: function (data) {
+                $("#purchasedata").html(data)
+                $('#loading').hide();
+            },
+            error: function () {
+                $("#MessageToClient").text("The web server had an error.");
+            }
+        });
+        return false;
+        //}
+    });
+</script>
 

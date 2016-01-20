@@ -10,6 +10,7 @@ namespace Accounts.Web.ViewModel
 {
     public class IssueItemsViewModel
     {
+        [Required]
         public string IssueInvoice { get; set; }
         public string InwardInvoice { get; set; }
         public string ItemName { get; set; }
@@ -19,12 +20,14 @@ namespace Accounts.Web.ViewModel
         public string DepartmentName { get; set; }
         public string EmployeeName { get; set; }
         public string Remark { get; set; }
+        [Required]
         public decimal? IssuedQuantity { get; set; }
         public decimal? InwardQuantity { get; set; }
         public decimal? RemainingItem { get; set; }
         public Guid StoreItemsId { get; set; }
         public virtual StoreItems StoreItems { get; set; }
         public string IssueType { get; set; }
+
         public List<SelectListItem> IssueTypeList { get; set; }
         public List<SelectListItem> getIssueTypeList()
         {

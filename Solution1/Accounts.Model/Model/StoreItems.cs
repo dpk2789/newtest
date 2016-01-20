@@ -9,8 +9,10 @@ namespace Accounts.Model.Model
 {
     public class StoreItems : AuditableEntity<Guid>
     {
+        public DateTime? ItemAddedDate { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
+        public string Type { get; set; }
         public decimal Quantity { get; set; }
         public decimal UnitPrice { get; set; }
         public decimal ExtendedPrice { get; set; }
@@ -20,6 +22,7 @@ namespace Accounts.Model.Model
         public Guid StoreId { get; set; }
         public virtual Store Store { get; set; }
         public Guid? PurchaseBillId { get; set; }
+        public Guid? PurchaseItemsId { get; set; }
         public virtual IList<IssueItems> IssueItems { get; set; }
       
     }

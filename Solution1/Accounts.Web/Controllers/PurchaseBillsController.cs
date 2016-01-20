@@ -85,6 +85,11 @@ namespace Accounts.Web.Controllers
                         automaticNumbering = automaticInvoiceForm.Numbering + Count + 1;
                         purchaseBill.BillInvoice = automaticInvoiceForm.Prefix + automaticNumbering.ToString() + automaticInvoiceForm.Suffix;
                     }
+                    else
+                    {
+                        automaticNumbering = automaticInvoiceForm.Numbering  + 1;
+                        purchaseBill.BillInvoice = automaticInvoiceForm.Prefix + automaticNumbering.ToString() + automaticInvoiceForm.Suffix;
+                    }
                 }
 
             }

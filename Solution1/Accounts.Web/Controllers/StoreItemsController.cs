@@ -21,7 +21,7 @@ namespace Accounts.Web.Controllers
             var storeItems = _dbContext.StoreItems.Include(s => s.Store).Include(s => s.Unit);
             return View(storeItems.ToList());
         }
-      
+
         public ActionResult Details(Guid? id)
         {
             if (id == null)
@@ -47,7 +47,7 @@ namespace Accounts.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Code,Name,Quantity,UnitPrice,UnitId,StoreId,PurchaseBillId")] StoreItems storeItems)
+        public ActionResult Create([Bind(Include = "Id,Code,Name,Quantity,UnitPrice,UnitId,StoreId,PurchaseBillId,ItemAddedDate")] StoreItems storeItems)
         {
             if (ModelState.IsValid)
             {
@@ -62,6 +62,54 @@ namespace Accounts.Web.Controllers
             ViewBag.UnitId = new SelectList(_dbContext.Units, "Id", "Name", storeItems.UnitId);
             return View(storeItems);
         }
+
+        public ActionResult OtherItemsReq(string ItemName, decimal? IssuedQuantity)
+        {
+            List<ItemsRequiredViewModel> itemRequiredViewModelList = new List<ItemsRequiredViewModel>();
+            if (IssuedQuantity == null)
+            {
+                return PartialView("_OtherItemsReq", itemRequiredViewModelList);
+            }
+            else
+            {
+
+                var itemDetail = _dbContext.Items.Where(x => x.Name == ItemName).FirstOrDefault();
+                var ingredientsRequired = _dbContext.CompoundItemIngredients.Where(x => x.ItemId == itemDetail.Id);
+                var storeItems = _dbContext.StoreItems.ToList();
+                var units = _dbContext.Units.ToList();
+                if (ingredientsRequired.Count() == 0)
+                {
+
+                }
+                else
+                {
+                    foreach (var item in ingredientsRequired)
+                    {
+                        ItemsRequiredViewModel itemRequiredViewModel = new ItemsRequiredViewModel();
+                        string ingridientName = item.IngridentName;
+                        decimal ingridientQuantity = item.UnitQuantity;
+                        var unit = units.Where(u => u.Id == item.IngridentUnitId).FirstOrDefault();
+                        itemRequiredViewModel.UnitName = unit.Name;
+                        itemRequiredViewModel.IngridentName = item.IngridentName;
+                        itemRequiredViewModel.IngridentId = item.IngridentId;
+                        var storeItem = storeItems.Where(s => s.Name == ingridientName).FirstOrDefault();
+                        // StoreItemsViewModel viewModel = Mapper.Map<StoreItemsViewModel>(storeItem);
+                        if (storeItem.BalanceQuantity > 0)
+                        {
+                            // decimal issueQuantity= Convert.ToDecimal(IssuedQuantity);
+                            decimal? requiredQuantity = IssuedQuantity * ingridientQuantity;
+                            itemRequiredViewModel.RequiredQuantity = requiredQuantity;
+                        }
+
+                        itemRequiredViewModelList.Add(itemRequiredViewModel);
+                    }
+                }
+
+                return PartialView("_OtherItemsReq", itemRequiredViewModelList);
+            }
+
+        }
+
 
         public ActionResult StoreItems(Guid? storeid)
         {
@@ -99,6 +147,29 @@ namespace Accounts.Web.Controllers
         public ActionResult IssueItems()
         {
             ViewBag.StoreId = new SelectList(_dbContext.Store, "Id", "Name");
+            return View();
+        }
+
+
+        [HttpPost]
+        public ActionResult IssueIngridients(string ItemName, decimal? IssuedQuantity)
+        {
+            IssueItems issueItems = new IssueItems();
+            issueItems.IssueType = "Issue";
+            StoreItems storeItems = _dbContext.StoreItems.Find(issueItems.StoreItemsId);
+            decimal? remaningItems = storeItems.BalanceQuantity - issueItems.IssuedQuantity;
+            issueItems.RemainingItem = remaningItems;
+            issueItems.Id = Guid.NewGuid();
+
+            // updating store items balance items
+            storeItems.BalanceQuantity = remaningItems;
+            _dbContext.Entry(storeItems).State = EntityState.Modified;
+
+            _dbContext.IssueItems.Add(issueItems);
+            _dbContext.SaveChanges();
+            return Json(new { success = true });
+
+
             return View();
         }
 

@@ -196,6 +196,7 @@
     <Compile Include="Controllers\SuppliersController.cs" />
     <Compile Include="Controllers\TaxCategoriesController.cs" />
     <Compile Include="Controllers\TaxesController.cs" />
+    <Compile Include="Controllers\UnitRelationsController.cs" />
     <Compile Include="Controllers\UnitsController.cs" />
     <Compile Include="Controllers\WareHousesController.cs" />
     <Compile Include="Global.asax.cs">
@@ -208,9 +209,11 @@
     <Compile Include="ViewModel\AutomaticInvoiceFormViewModel.cs" />
     <Compile Include="ViewModel\CompoundItemIngredientViewModel.cs" />
     <Compile Include="ViewModel\IssueItemsViewModel.cs" />
+    <Compile Include="ViewModel\ItemsRequiredViewModel.cs" />
     <Compile Include="ViewModel\ItemViewModel.cs" />
     <Compile Include="ViewModel\PurchaseBillViewModel.cs" />
     <Compile Include="ViewModel\PurchaseItemsViewModel.cs" />
+    <Compile Include="ViewModel\StockBookViewModel.cs" />
     <Compile Include="ViewModel\StoreItemsViewModel.cs" />
     <Compile Include="ViewModel\SupplierViewModel.cs" />
   </ItemGroup>
@@ -425,8 +428,14 @@
     <Content Include="Scripts\DataTables\responsive.foundation.min.js" />
     <Content Include="Scripts\DataTables\responsive.jqueryui.js" />
     <Content Include="Scripts\DataTables\responsive.jqueryui.min.js" />
+    <None Include="Scripts\jquery-2.2.0-vsdoc.js" />
+    <Content Include="Scripts\jquery-2.2.0.js" />
+    <Content Include="Scripts\jquery-2.2.0.min.js" />
     <Content Include="Scripts\jquery-ui-1.11.4.js" />
     <Content Include="Scripts\jquery-ui-1.11.4.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\moment-with-locales.js" />
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />
@@ -457,13 +466,9 @@
     <Content Include="Content\DataTables\css\mixins.scss" />
     <Content Include="Content\DataTables\css\common.scss" />
     <None Include="Properties\PublishProfiles\Built_001.pubxml" />
+    <None Include="Properties\PublishProfiles\Built_002.pubxml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
-    <Content Include="Scripts\jquery-2.1.4.js" />
-    <Content Include="Scripts\jquery-2.1.4.min.js" />
-    <Content Include="Scripts\jquery-2.1.4.min.map" />
-    <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery-2.2.0.min.map" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
@@ -588,6 +593,13 @@
     <Content Include="Views\CompoundItemIngredients\Details.cshtml" />
     <Content Include="Views\CompoundItemIngredients\Edit.cshtml" />
     <Content Include="Views\CompoundItemIngredients\Index.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\ShortDateFormat.cshtml" />
+    <Content Include="Views\StoreItems\_OtherItemsReq.cshtml" />
+    <Content Include="Views\UnitRelations\Create.cshtml" />
+    <Content Include="Views\UnitRelations\Delete.cshtml" />
+    <Content Include="Views\UnitRelations\Details.cshtml" />
+    <Content Include="Views\UnitRelations\Edit.cshtml" />
+    <Content Include="Views\UnitRelations\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

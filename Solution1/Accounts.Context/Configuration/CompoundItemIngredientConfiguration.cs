@@ -13,7 +13,7 @@ namespace Accounts.Context.Configuration
         public CompoundItemIngredientConfiguration()
         {
             this.ToTable("tbl_CompoundItemIngredient");
-
+            HasRequired(c => c.Unit).WithMany(d => d.CompoundItemIngredient).HasForeignKey(d => new { d.IngridentUnitId });
         }
     }
 }

@@ -42,45 +42,256 @@ namespace Accounts.Web.Controllers
             ViewBag.ItemId = new SelectList(_dbContext.Items, "Id", "Name");
             ViewBag.CategoryId = new SelectList(_dbContext.ItemCategoryies, "Id", "CategoryName");
             ViewBag.StoreId = new SelectList(_dbContext.Store, "Id", "Name");
-            //decimal? totalextendedprice = 0;
-            //decimal? totalitemquantity = 0;
+            List<StockBookViewModel> stockBookViewModelList = new List<ViewModel.StockBookViewModel>();
+
             var issueItems = _dbContext.IssueItems.ToList();
-            var viewModel = Mapper.Map<IEnumerable<IssueItemsViewModel>>(issueItems);
-            //foreach (var item in viewModel)
-            //{
-            //    totalextendedprice = item.ExtendedPrice + totalextendedprice;
-            //    totalitemquantity = item.Quantity + totalitemquantity;
-            //}
-            //ViewBag.ExtendedItemTotal = totalextendedprice;
-            //ViewBag.TotalItemQuantity = totalitemquantity;
-            return View(viewModel.ToList());
-        }
-        public ActionResult DisplaySearchResults(Guid? supplierId, DateTime? todate, DateTime? fromdate)
-        {
-            if (supplierId != null)
+            var storeItems = _dbContext.StoreItems.OrderBy(x => x.ItemAddedDate);
+
+            // var viewModel = Mapper.Map<IEnumerable<StockBookViewModel>>(storeItems);
+            foreach (var storeItem in storeItems)
             {
-                if (todate != null && fromdate != null)
+                StockBookViewModel stockBookViewModelNew = new StockBookViewModel();
+                stockBookViewModelNew.ItemAddedDate = storeItem.ItemAddedDate;
+                stockBookViewModelNew.Name = storeItem.Name;
+                stockBookViewModelNew.Quantity = storeItem.Quantity;
+                stockBookViewModelNew.UnitPrice = storeItem.UnitPrice;
+                stockBookViewModelNew.ExtendedPrice = storeItem.ExtendedPrice;
+                stockBookViewModelNew.BalanceQuantity = storeItem.Quantity;
+                stockBookViewModelNew.Type = storeItem.Type;
+                stockBookViewModelList.Add(stockBookViewModelNew);
+                var issue = issueItems.Where(x => x.StoreItemsId == storeItem.Id);
+                if (issue.Count() == 0)
                 {
-                    var purchaseBills = _dbContext.PurchaseBills.Where(s => s.SupplierId == supplierId);
-                    var toFromList = purchaseBills.Where(d1 => d1.BillDate >= todate && d1.BillDate <= fromdate);
-                    var viewModel = Mapper.Map<IEnumerable<PurchaseBillViewModel>>(toFromList);
-                    return PartialView("_PurchaseBills", viewModel);
+                    //StockBookViewModel stockBookViewModel = new StockBookViewModel();
+                    //stockBookViewModel.ItemAddedDate = storeItem.ItemAddedDate;
+                    //stockBookViewModel.Name = storeItem.Name;
+                    //stockBookViewModel.Quantity = storeItem.Quantity;
+                    //stockBookViewModel.UnitPrice = storeItem.UnitPrice;
+                    //stockBookViewModel.ExtendedPrice = storeItem.ExtendedPrice;
+                    //stockBookViewModelList.Add(stockBookViewModel);
+                }
+                else
+                {
+                    foreach (var issueItem in issue)
+                    {
+                        StockBookViewModel stockBookViewModel = new StockBookViewModel();
+                        stockBookViewModel.ItemAddedDate = issueItem.IssueDate;
+                        stockBookViewModel.Name = storeItem.Name;
+                        stockBookViewModel.IssuedQuantity = issueItem.IssuedQuantity;
+                        stockBookViewModel.BalanceQuantity = issueItem.RemainingItem;
+                        stockBookViewModel.Type = issueItem.IssueType;
+                        stockBookViewModelList.Add(stockBookViewModel);
+                    }
+
+                }
+            }
+
+            return View(stockBookViewModelList);
+        }
+        public ActionResult DisplaySearchResults(Guid? StoreId, int? CategoryId, Guid? ItemId, DateTime? todate, DateTime? fromdate)
+        {
+            List<StockBookViewModel> stockBookViewModelList = new List<ViewModel.StockBookViewModel>();
+
+            if (StoreId != null)
+            {
+                if (CategoryId != null)
+                {
+                    var items = _dbContext.Items.Where(x => x.ItemCategoryId == CategoryId);
+                    var viewModel = Mapper.Map<IEnumerable<ItemViewModel>>(items);
+                    var issueItems = _dbContext.IssueItems.ToList();
+                    if (todate != null && fromdate != null)
+                    {
+                        foreach (var item in viewModel)
+                        {
+                            var storeItems = _dbContext.StoreItems.Where(s => s.Code == item.Code && s.StoreId == StoreId);
+                            var toFromList = storeItems.Where(d1 => d1.ItemAddedDate >= todate && d1.ItemAddedDate <= fromdate);
+                            if (storeItems.Count() != 0)
+                            {
+                                foreach (var storeItem in toFromList)
+                                {
+                                    StockBookViewModel stockBookViewModelNew = new StockBookViewModel();
+                                    stockBookViewModelNew.ItemAddedDate = storeItem.ItemAddedDate;
+                                    stockBookViewModelNew.Name = storeItem.Name;
+                                    stockBookViewModelNew.Quantity = storeItem.Quantity;
+                                    stockBookViewModelNew.UnitPrice = storeItem.UnitPrice;
+                                    stockBookViewModelNew.ExtendedPrice = storeItem.ExtendedPrice;
+                                    stockBookViewModelNew.BalanceQuantity = storeItem.Quantity;
+                                    stockBookViewModelNew.Type = storeItem.Type;
+                                    stockBookViewModelList.Add(stockBookViewModelNew);
+                                    var issue = issueItems.Where(x => x.StoreItemsId == storeItem.Id);
+                                    if (issue.Count() == 0)
+                                    {
+                                        //StockBookViewModel stockBookViewModel = new StockBookViewModel();
+                                        //stockBookViewModel.ItemAddedDate = storeItem.ItemAddedDate;
+                                        //stockBookViewModel.Name = storeItem.Name;
+                                        //stockBookViewModel.Quantity = storeItem.Quantity;
+                                        //stockBookViewModel.UnitPrice = storeItem.UnitPrice;
+                                        //stockBookViewModel.ExtendedPrice = storeItem.ExtendedPrice;
+                                        //stockBookViewModelList.Add(stockBookViewModel);
+                                    }
+                                    else
+                                    {
+                                        foreach (var issueItem in issue)
+                                        {
+                                            StockBookViewModel stockBookViewModel = new StockBookViewModel();
+                                            stockBookViewModel.ItemAddedDate = issueItem.IssueDate;
+                                            stockBookViewModel.Name = storeItem.Name;
+                                            stockBookViewModel.IssuedQuantity = issueItem.IssuedQuantity;
+                                            stockBookViewModel.BalanceQuantity = issueItem.RemainingItem;
+                                            stockBookViewModel.Type = issueItem.IssueType;
+                                            stockBookViewModelList.Add(stockBookViewModel);
+                                        }
+
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                    else
+                    {
+
+                        foreach (var item in viewModel)
+                        {
+                            var storeItems = _dbContext.StoreItems.Where(s => s.Code == item.Code && s.StoreId == StoreId);
+                            if (storeItems.Count() != 0)
+                            {
+                                foreach (var storeItem in storeItems)
+                                {
+                                    StockBookViewModel stockBookViewModelNew = new StockBookViewModel();
+                                    stockBookViewModelNew.ItemAddedDate = storeItem.ItemAddedDate;
+                                    stockBookViewModelNew.Name = storeItem.Name;
+                                    stockBookViewModelNew.Quantity = storeItem.Quantity;
+                                    stockBookViewModelNew.UnitPrice = storeItem.UnitPrice;
+                                    stockBookViewModelNew.ExtendedPrice = storeItem.ExtendedPrice;
+                                    stockBookViewModelNew.BalanceQuantity = storeItem.Quantity;
+                                    stockBookViewModelNew.Type = storeItem.Type;
+                                    stockBookViewModelList.Add(stockBookViewModelNew);
+                                    var issue = issueItems.Where(x => x.StoreItemsId == storeItem.Id);
+                                    if (issue.Count() == 0)
+                                    {
+                                        //StockBookViewModel stockBookViewModel = new StockBookViewModel();
+                                        //stockBookViewModel.ItemAddedDate = storeItem.ItemAddedDate;
+                                        //stockBookViewModel.Name = storeItem.Name;
+                                        //stockBookViewModel.Quantity = storeItem.Quantity;
+                                        //stockBookViewModel.UnitPrice = storeItem.UnitPrice;
+                                        //stockBookViewModel.ExtendedPrice = storeItem.ExtendedPrice;
+                                        //stockBookViewModelList.Add(stockBookViewModel);
+                                    }
+                                    else
+                                    {
+                                        foreach (var issueItem in issue)
+                                        {
+                                            StockBookViewModel stockBookViewModel = new StockBookViewModel();
+                                            stockBookViewModel.ItemAddedDate = issueItem.IssueDate;
+                                            stockBookViewModel.Name = storeItem.Name;
+                                            stockBookViewModel.IssuedQuantity = issueItem.IssuedQuantity;
+                                            stockBookViewModel.BalanceQuantity = issueItem.RemainingItem;
+                                            stockBookViewModel.Type = issueItem.IssueType;
+                                            stockBookViewModelList.Add(stockBookViewModel);
+                                        }
+
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+
 
                 }
                 else
                 {
-                    var purchaseBills = _dbContext.PurchaseBills.Where(s => s.SupplierId == supplierId);
-                    var viewModel = Mapper.Map<IEnumerable<PurchaseBillViewModel>>(purchaseBills);
-                    return PartialView("_PurchaseBills", viewModel);
+                    var issueItems = _dbContext.IssueItems.ToList();
+                    var storeItems = _dbContext.StoreItems.Where(s => s.StoreId == StoreId);
+                    if (todate != null && fromdate != null)
+                    {
+                        var toFromList = storeItems.Where(d1 => d1.ItemAddedDate >= todate && d1.ItemAddedDate <= fromdate);
+                        foreach (var storeItem in toFromList)
+                        {
+                            StockBookViewModel stockBookViewModelNew = new StockBookViewModel();
+                            stockBookViewModelNew.ItemAddedDate = storeItem.ItemAddedDate;
+                            stockBookViewModelNew.Name = storeItem.Name;
+                            stockBookViewModelNew.Quantity = storeItem.Quantity;
+                            stockBookViewModelNew.UnitPrice = storeItem.UnitPrice;
+                            stockBookViewModelNew.ExtendedPrice = storeItem.ExtendedPrice;
+                            stockBookViewModelNew.BalanceQuantity = storeItem.Quantity;
+                            stockBookViewModelNew.Type = storeItem.Type;
+                            stockBookViewModelList.Add(stockBookViewModelNew);
+                            var issue = issueItems.Where(x => x.StoreItemsId == storeItem.Id);
+                            if (issue.Count() == 0)
+                            {
+                                //StockBookViewModel stockBookViewModel = new StockBookViewModel();
+                                //stockBookViewModel.ItemAddedDate = storeItem.ItemAddedDate;
+                                //stockBookViewModel.Name = storeItem.Name;
+                                //stockBookViewModel.Quantity = storeItem.Quantity;
+                                //stockBookViewModel.UnitPrice = storeItem.UnitPrice;
+                                //stockBookViewModel.ExtendedPrice = storeItem.ExtendedPrice;
+                                //stockBookViewModelList.Add(stockBookViewModel);
+                            }
+                            else
+                            {
+                                foreach (var issueItem in issue)
+                                {
+                                    StockBookViewModel stockBookViewModel = new StockBookViewModel();
+                                    stockBookViewModel.ItemAddedDate = issueItem.IssueDate;
+                                    stockBookViewModel.Name = storeItem.Name;
+                                    stockBookViewModel.IssuedQuantity = issueItem.IssuedQuantity;
+                                    stockBookViewModel.BalanceQuantity = issueItem.RemainingItem;
+                                    stockBookViewModel.Type = issueItem.IssueType;
+                                    stockBookViewModelList.Add(stockBookViewModel);
+                                }
+
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var storeItem in storeItems)
+                        {
+                            StockBookViewModel stockBookViewModelNew = new StockBookViewModel();
+                            stockBookViewModelNew.ItemAddedDate = storeItem.ItemAddedDate;
+                            stockBookViewModelNew.Name = storeItem.Name;
+                            stockBookViewModelNew.Quantity = storeItem.Quantity;
+                            stockBookViewModelNew.UnitPrice = storeItem.UnitPrice;
+                            stockBookViewModelNew.ExtendedPrice = storeItem.ExtendedPrice;
+                            stockBookViewModelNew.BalanceQuantity = storeItem.Quantity;
+                            stockBookViewModelNew.Type = storeItem.Type;
+                            stockBookViewModelList.Add(stockBookViewModelNew);
+                            var issue = issueItems.Where(x => x.StoreItemsId == storeItem.Id);
+                            if (issue.Count() == 0)
+                            {
+                                //StockBookViewModel stockBookViewModel = new StockBookViewModel();
+                                //stockBookViewModel.ItemAddedDate = storeItem.ItemAddedDate;
+                                //stockBookViewModel.Name = storeItem.Name;
+                                //stockBookViewModel.Quantity = storeItem.Quantity;
+                                //stockBookViewModel.UnitPrice = storeItem.UnitPrice;
+                                //stockBookViewModel.ExtendedPrice = storeItem.ExtendedPrice;
+                                //stockBookViewModelList.Add(stockBookViewModel);
+                            }
+                            else
+                            {
+                                foreach (var issueItem in issue)
+                                {
+                                    StockBookViewModel stockBookViewModel = new StockBookViewModel();
+                                    stockBookViewModel.ItemAddedDate = issueItem.IssueDate;
+                                    stockBookViewModel.Name = storeItem.Name;
+                                    stockBookViewModel.IssuedQuantity = issueItem.IssuedQuantity;
+                                    stockBookViewModel.BalanceQuantity = issueItem.RemainingItem;
+                                    stockBookViewModel.Type = issueItem.IssueType;
+                                    stockBookViewModelList.Add(stockBookViewModel);
+                                }
+
+                            }
+                        }
+                    }
+
+                    // var viewModel = Mapper.Map<IEnumerable<StockBookViewModel>>(storeItems);
                 }
             }
-            else
-            {
-                var toFromList = _dbContext.PurchaseBills.Where(d1 => d1.BillDate >= todate && d1.BillDate <= fromdate);
-                var viewModel = Mapper.Map<IEnumerable<PurchaseBillViewModel>>(toFromList);
-                return PartialView("_PurchaseBills", viewModel);
 
-            }
+
+            return PartialView("_CurrentStock", stockBookViewModelList);
         }
 
         public ActionResult Details(Guid? id)
@@ -110,6 +321,7 @@ namespace Accounts.Web.Controllers
             return PartialView("_Create", viewModel);
         }
 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,IssueInvoice,IssueDate,DepartmentName,EmployeeName,Remark,IssuedQuantity,RemainingItem,StoreItemsId,IssueType")] IssueItemsViewModel viewModel)
@@ -117,6 +329,7 @@ namespace Accounts.Web.Controllers
             if (ModelState.IsValid)
             {
                 IssueItems issueItems = Mapper.Map<IssueItems>(viewModel);
+                issueItems.IssueType = "Issue";
                 StoreItems storeItems = _dbContext.StoreItems.Find(issueItems.StoreItemsId);
                 decimal? remaningItems = storeItems.BalanceQuantity - issueItems.IssuedQuantity;
                 issueItems.RemainingItem = remaningItems;
@@ -154,6 +367,7 @@ namespace Accounts.Web.Controllers
             if (ModelState.IsValid)
             {
                 IssueItems issueItems = Mapper.Map<IssueItems>(viewModel);
+                issueItems.IssueType = "Return";
                 StoreItems storeItems = _dbContext.StoreItems.Find(issueItems.StoreItemsId);
                 decimal? remaningItems = storeItems.BalanceQuantity + issueItems.InwardQuantity;
                 issueItems.RemainingItem = remaningItems;
@@ -170,7 +384,7 @@ namespace Accounts.Web.Controllers
 
             ViewBag.IssueType = new SelectList(viewModel.getIssueTypeList(), "Value", "Text", "1");
             return View(viewModel);
-        }       
+        }
 
         public ActionResult Edit(Guid? id)
         {

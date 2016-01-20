@@ -31,7 +31,7 @@
             <div class="">
                 <!-- tabs left -->
                 <div class="tabbable tabs-left">
-                    <ul class="nav nav-tabs nav-pills nav-stacked success col-md-2">
+                    <ul class="nav nav-tabs nav-pills nav-stacked success col-sm-2">
                         @{
                             int j = 0;
                             foreach (var item in Model)
@@ -39,7 +39,7 @@
                                 if (j == 1)
                                 {
                                     <li>
-                                        <a href="#@item.Id" class="list-group-item" data-toggle="tab">
+                                        <a href="#@item.Id" class="list-group-item small" data-toggle="tab">
                                             <i class="fa fa-comment fa-fw"></i> @Html.DisplayFor(modelItem => item.Name)
                                             <span class="pull-right text-muted small">
                                                 <em class="green">
@@ -54,7 +54,7 @@
                                 else
                                 {
                                     <li class="active">
-                                        <a href="#@item.Id" class="list-group-item" data-toggle="tab">
+                                        <a href="#@item.Id" class="list-group-item small" data-toggle="tab">
                                             <i class="fa fa-comment fa-fw"></i> @Html.DisplayFor(modelItem => item.Name)
                                             <span class="pull-right text-muted small">
                                                 <em class="green">
@@ -78,8 +78,8 @@
                                 if (i == 1)
                                 {
                                     <div class="tab-pane" id="@store.Id">
-                                        <div class="row">
-                                            <div class="col-md-9 small">
+                                        <div class="row col-md-offset-2">
+                                            <div class="col-md-11 small">
                                                 @{ Html.RenderAction("StoreItems", "StoreItems", new { storeid = store.Id });}
                                             </div>
                                         </div>
@@ -88,8 +88,8 @@
                                 else
                                 {
                                     <div class="tab-pane active" id="@store.Id">
-                                        <div class="row">
-                                            <div class="col-md-9 small">
+                                        <div class="row col-md-offset-2">
+                                            <div class="col-md-11 small">
                                                 @{ Html.RenderAction("StoreItems", "StoreItems", new { storeid = store.Id });}
                                             </div>
                                         </div>

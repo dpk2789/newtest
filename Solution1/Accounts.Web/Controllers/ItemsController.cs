@@ -75,6 +75,7 @@ namespace Accounts.Web.Controllers
             }
             ViewBag.ItemCategoryId = new SelectList(_dbContext.ItemCategoryies, "Id", "CategoryName", item.ItemCategoryId);
             ViewBag.UnitId = new SelectList(_dbContext.Units, "Id", "Name", item.UnitId);
+            ViewBag.IngridentUnitId = new SelectList(_dbContext.Units, "Id", "Name", item.UnitId);
             ViewBag.IngridentId = new SelectList(_dbContext.Items, "Id", "Name");
             return View(item);
         }
@@ -99,6 +100,8 @@ namespace Accounts.Web.Controllers
                     CompoundItemIngredient compoundItemIngredient = new CompoundItemIngredient();
                     compoundItemIngredient.Id = Guid.NewGuid();
                     compoundItemIngredient.IngridentId = ingrident.IngridentId;
+                    compoundItemIngredient.UnitQuantity = ingrident.UnitQuantity;
+                    compoundItemIngredient.IngridentUnitId = ingrident.IngridentUnitId;
                     compoundItemIngredient.IngridentName = ingrident.IngridentName;
                     compoundItemIngredient.ItemId = ingrident.ItemId;
                     _dbContext.CompoundItemIngredients.Add(compoundItemIngredient);

@@ -19,7 +19,6 @@ namespace Accounts.Model.Model
         public Guid UnitId { get; set; }
         public string TaxType { get; set; }
         public string ItemType { get; set; }
-
         public virtual IList<CompoundItemIngredient> CompoundItemIngredients { get; set; }
     }
 }

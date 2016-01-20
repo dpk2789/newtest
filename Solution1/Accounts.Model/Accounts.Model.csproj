@@ -72,6 +72,7 @@
     <Compile Include="Model\Supplier.cs" />
     <Compile Include="Model\Tax.cs" />
     <Compile Include="Model\TaxCategory.cs" />
+    <Compile Include="Model\UnitRelations.cs" />
     <Compile Include="Model\WareHouse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\Unit.cs" />

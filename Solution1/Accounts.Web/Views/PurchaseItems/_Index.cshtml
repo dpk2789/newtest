@@ -27,7 +27,7 @@
                 </th>
                 <th>
                     <p>
-                        @Html.ActionLink("Add", "Create", "PurchaseItems", new { purchaseBillId = ViewBag.purchaseBillId },
+                        @Html.ActionLink("Add", "Create", "PurchaseItems", new { purchaseBillId = ViewBag.purchaseBillId, puchaseBillDate = ViewBag.purchaseBillDate },
                          new { @class = "btn btn-primary btn-xs", data_modal = "purchaseitem" })
                     </p>
                 </th>
@@ -56,10 +56,10 @@
                     </td>
                     <td>
                         @Html.ActionLink("Details", "Edit", "PurchaseItems",
-                                             new { id = item.Id }, new { @class = "btn btn-default btn-xs", data_modal = "purchaseitem" })
+                                          new { id = item.Id, puchaseBillDate = ViewBag.purchaseBillDate }, new { @class = "btn btn-default btn-xs", data_modal = "purchaseitem" })
 
                         @Html.ActionLink("Delete", "Delete", "PurchaseItems",
-                                             new { id = item.Id }, new { @class = "btn btn-danger btn-xs", data_modal = "purchaseitem" })
+                                       new { id = item.Id, puchaseBillId = ViewBag.purchaseBillId }, new { @class = "btn btn-danger btn-xs", data_modal = "purchaseitem" })
                     </td>
                 </tr>
             }
@@ -75,7 +75,7 @@
                 <td></td>
                 <td><b>Total :-</b> <text>Rs.</text><b>@String.Format("{0:#,###.00}", total)<input id="itemtotal" type="hidden" value="@total" /></b></td>
                 <td></td>
-                
+
             </tr>
 
         </table>
