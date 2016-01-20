@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Accounts.Model.Model.UnitRelations>
+
+<h2>Compound Unit</h2>
+<hr />
+
+<div class="table-responsive">
+    <table class="table table-hover table-striped table-condensed table-bordered">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BigUnitId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RelationNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SmallUnitId)
+            </th>          
+            <th>
+                @Html.DisplayNameFor(model => model.IsActive)
+            </th>
+            <th>
+                <p>
+                    @Html.ActionLink("Create", "Create", null, new { @class = "btn btn-success btn-xs" })
+                </p>
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @ViewBag.BigUnitName
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RelationNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Unit.Name)
+            </td>          
+            <td>
+                @Html.DisplayFor(modelItem => item.IsActive)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |               
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+        }
+
+    </table>
+</div>

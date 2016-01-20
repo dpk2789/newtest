@@ -1,0 +1,72 @@
+﻿@model IEnumerable<Accounts.Web.ViewModel.ItemsRequiredViewModel>
+
+<div data-role="page">
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+</div>
+
+<div class="col-md-10">
+    <div class="table table-responsive">
+        <table class="table table-hover table-striped table-condensed table-bordered">
+            <tr>
+                <th>
+                    <label>Name</label>
+                </th>
+                <th>
+                    <label>Unit</label>
+                </th>
+                <th>
+                    <label>Quantity Req.</label>
+                </th>
+                <th></th>
+            </tr>
+            <tbody id="tbodyorder" class="tbodyorder bordered">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <input type="hidden" class='pid' value="@item.IngridentId" />
+                            <p class='ingridentName'>@item.IngridentName</p>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UnitName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RequiredQuantity)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Issue", "Edit", "StoreItems",
+                                          new { id = item.ItemId, puchaseBillDate = ViewBag.purchaseBillDate }, new { @class = "btn btn-default btn-xs issueitem" })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+<script>
+    $('.issueitem').on("click", function (e) {
+        $('#loading').html('<img src="/Images/default.gif" /> loading...');
+        var tr = $(this).closest('tr');
+        var ingidientId = tr.find(".pid").val();
+        var ingridentName = tr.find(".ingridentName").html();
+        var issueInvoice = $('#IssueInvoice').val();
+        var issueDate = $('#IssueDate').val();
+        alert(issueDate)
+        $.ajax({
+            url: "@Url.Action("IssueIngridients", "StoreItems")",
+            type: "POST",
+            data: { ingidientId: ingidientId, ingridentName: ingridentName, issueInvoice: issueInvoice, issueDate: issueDate },
+            success: function (data) {
+                $("#purchasedata").html(data)
+                $('#loading').hide();
+            },
+            error: function () {
+                $("#MessageToClient").text("The web server had an error.");
+            }
+        });
+        return false;
+        //}
+    });
+</script>
